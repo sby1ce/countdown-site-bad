@@ -1,0 +1,29 @@
+body {
+  background-color: #111111;
+  color: #cccccc;
+  font-size: 20px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #bbbbbb;
+}
+
+p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5em;
+  /*height: 30px;*/
+}
+
+h1, p {
+  margin: 10px;
+}
