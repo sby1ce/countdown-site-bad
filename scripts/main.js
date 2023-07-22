@@ -1,20 +1,31 @@
-function convertDateToString(time, format) {
+function convertDateToString(interval, format) {
+  let time = interval;
+  let result = "";
+
   if (time < 0) {
     // If the count down is finished, write some text
     // TODO: negative countdown
     return "EXPIRED";
-  } else if (format === "dhms") {
-    const seconds = Math.floor((time % (1000 * 60)) / 1000);
-    const minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-    const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const days = Math.floor(time / (1000 * 60 * 60 * 24));
-
-    return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-  } else if (format === "s") {
-    return Math.floor(time / 1000) + "s";
-  } else {
-    return time;
   }
+
+  if (format.includes("d ")) {
+    result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
+    time = time % (1000 * 60 * 60 * 24)
+  } 
+  if (format.includes("h ")) {
+    result = result + (Math.floor(time / (1000 * 60 * 60)) + "h ");
+    time = time % (1000 * 60 * 60)
+  } 
+  if (format.includes("m ")) {
+    result = result + (Math.floor(time / (1000 * 60)) + "m ");
+    time = time % (1000 * 60)
+  } 
+  if (format.includes("s")) {
+     result = result + (Math.floor(time / 1000) + "s ");
+     time = time % 1000;
+  }
+  
+  return result;
 }
 
 function writeTimer(countdownElement) {
@@ -45,8 +56,8 @@ function writeTimer(countdownElement) {
     var distance = countDownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
-    var timeInDHMS = convertDateToString(distance, "dhms");
-    var timeInSeconds = convertDateToString(distance, "s");
+    var timeInDHMS = convertDateToString(distance, "d h m s ");
+    var timeInSeconds = convertDateToString(distance, "s ");
 
     // Display the result in the element with id="demo"
     document.getElementById(countdownElement).innerHTML = timeInDHMS;
