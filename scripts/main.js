@@ -9,9 +9,9 @@ function convertDateToString(time, format) {
     const hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const days = Math.floor(time / (1000 * 60 * 60 * 24));
 
-    return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
   } else if (format === "s") {
-    return time / 1000;
+    return Math.floor(time / 1000) + "s";
   } else {
     return time;
   }
@@ -46,9 +46,11 @@ function writeTimer(countdownElement) {
 
     // Time calculations for days, hours, minutes and seconds
     var timeInDHMS = convertDateToString(distance, "dhms");
+    var timeInSeconds = convertDateToString(distance, "s");
 
     // Display the result in the element with id="demo"
     document.getElementById(countdownElement).innerHTML = timeInDHMS;
+    document.getElementById(countdownElement + "Seconds").innerHTML = timeInSeconds;
   }, 1000);
 }
 
