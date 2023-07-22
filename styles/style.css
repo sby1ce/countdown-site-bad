@@ -9,6 +9,11 @@ main {
   flex-direction: column;
 }
 
+.wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
 h1 {
   display: flex;
   justify-content: center;

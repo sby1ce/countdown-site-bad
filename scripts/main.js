@@ -4,14 +4,14 @@ function convertDateToString(time, format) {
     // TODO: negative countdown
     return "EXPIRED";
   } else if (format === "dhms") {
-    const days = Math.floor((interval % (1000 * 60)) / 1000);
-    const hours = Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60));
-    const minutes = Math.floor((interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const seconds = Math.floor(interval / (1000 * 60 * 60 * 24));
+    const days = Math.floor((time % (1000 * 60)) / 1000);
+    const hours = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+    const minutes = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const seconds = Math.floor(time / (1000 * 60 * 60 * 24));
 
     return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
   } else if (format === "s") {
-    return 
+    return time / 1000;
   } else {
     return time;
   }
