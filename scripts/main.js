@@ -1,27 +1,19 @@
-function getUnitOfTime (interval, unit) {
-  if (unit === "second") {
-    return Math.floor((interval % (1000 * 60)) / 1000);
-  } else if (unit === "minute") {
-    return Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60));
-  } else if (unit === "hour") {
-    return Math.floor((interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  } else if (unit === "day") {
-    return Math.floor(interval / (1000 * 60 * 60 * 24));
-  } else {
-    return interval;
-  }
-  // TODO: Also refactor this
-}
+function convertDateToString(time, format) {
+  if (time < 0) {
+    // If the count down is finished, write some text
+    // TODO: negative countdown
+    return "EXPIRED";
+  } else if (format === "dhms") {
+    const days = Math.floor((interval % (1000 * 60)) / 1000);
+    const hours = Math.floor((interval % (1000 * 60 * 60)) / (1000 * 60));
+    const minutes = Math.floor((interval % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const seconds = Math.floor(interval / (1000 * 60 * 60 * 24));
 
-function convertDateToString(dateObject, format) {
-  if (format === "dhms") {
-    const days = getUnitOfTime(distance, "day")
-    const hours = getUnitOfTime(distance, "hour")
-    const minutes = getUnitOfTime(distance, "minute")
-    const seconds = getUnitOfTime(distance, "second")
     return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+  } else if (format === "s") {
+    return 
   } else {
-    return dateObject
+    return time;
   }
 }
 
@@ -57,13 +49,6 @@ function writeTimer(countdownElement) {
 
     // Display the result in the element with id="demo"
     document.getElementById(countdownElement).innerHTML = timeInDHMS;
-
-    // If the count down is finished, write some text
-    // TODO: Negative countdown?
-    if (distance < 0) {
-      clearInterval(x);
-      document.getElementById(countdownElement).innerHTML = "EXPIRED";
-    }
   }, 1000);
 }
 
