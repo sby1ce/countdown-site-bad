@@ -9,7 +9,7 @@ function convertDateToString(interval, format) {
   }
 
   if (format.includes("w ")) {
-    result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
+    result = result + (Math.floor(time / (1000 * 60 * 60 * 24 * 7)) + "w ");
     time = time % (1000 * 60 * 60 * 24 * 7)
   } 
   if (format.includes("d ")) {
@@ -42,7 +42,7 @@ function writeTimer(countdownElement) {
     var countDownDate = new Date("Jul 28, 2023 12:12:00 UTC+0").getTime();
   } else if (countdownElement === "taxiArrival") {
     var countDownDate = new Date("Jul 29, 2023 21:56:00 UTC+0").getTime();
-  } else if (countdownElement === "negativeTest") {
+  } else if (countdownElement === "test") {
     var countDownDate = new Date("2023-07-22 00:00:00 UTC+0").getTime();
   }
   // TODO: Make automatic highlight of the smallest countdown
@@ -63,8 +63,14 @@ function writeTimer(countdownElement) {
 
     // Display the result in the element
     document.getElementById(countdownElement).innerHTML = timeInDHMS;
-    document.getElementById(countdownElement + "Seconds").innerHTML = timeInSeconds;
-    document.getElementById(countdownElement + "Hours").innerHTML = timeInHours;
+    try {
+      document.getElementById(countdownElement + "Seconds").innerHTML = timeInSeconds;
+      document.getElementById(countdownElement + "Hours").innerHTML = timeInHours;
+    } catch (TypeError) {
+      console.error("No Seconds/Hours element");
+      var a = new Date("2023-07-22T00:00:00Z")
+      console.log(a);
+    }
   }, 1000);
 }
 
@@ -72,6 +78,7 @@ writeTimer("taxiDeparture");
 writeTimer("trainDeparture");
 writeTimer("trainArrival");
 writeTimer("taxiArrival");
+writeTimer("test")
 
 /*
 const testDeparture = new Date("Jul 28, 2023 13:12:00 UTC+0").getTime();
