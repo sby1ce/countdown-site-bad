@@ -8,6 +8,10 @@ function convertDateToString(interval, format) {
     return "EXPIRED";
   }
 
+  if (format.includes("w ")) {
+    result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
+    time = time % (1000 * 60 * 60 * 24 * 7)
+  } 
   if (format.includes("d ")) {
     result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
     time = time % (1000 * 60 * 60 * 24)
@@ -24,7 +28,7 @@ function convertDateToString(interval, format) {
      result = result + (Math.floor(time / 1000) + "s ");
      time = time % 1000;
   }
-  
+
   return result;
 }
 
@@ -39,16 +43,12 @@ function writeTimer(countdownElement) {
   } else if (countdownElement === "taxiArrival") {
     var countDownDate = new Date("Jul 29, 2023 21:56:00 UTC+0").getTime();
   } else if (countdownElement === "negativeTest") {
-    var countDownDate = new Date("2023-07-22 19:08:30 UTC+0").getTime();
+    var countDownDate = new Date("2023-07-22 00:00:00 UTC+0").getTime();
   }
-  // TODO: Refactor this
-  
-  // TODO: Other countdowns
   // TODO: Make automatic highlight of the smallest countdown
 
   // Update the count down every 1 second
   var x = setInterval( () => {
-
     // Get today's date and time
     var now = new Date().getTime();
 
@@ -58,10 +58,13 @@ function writeTimer(countdownElement) {
     // Time calculations for days, hours, minutes and seconds
     var timeInDHMS = convertDateToString(distance, "d h m s ");
     var timeInSeconds = convertDateToString(distance, "s ");
+    var timeInHours = convertDateToString(distance, "h ");
+    // TODO: Optimize hour calculation
 
-    // Display the result in the element with id="demo"
+    // Display the result in the element
     document.getElementById(countdownElement).innerHTML = timeInDHMS;
     document.getElementById(countdownElement + "Seconds").innerHTML = timeInSeconds;
+    document.getElementById(countdownElement + "Hours").innerHTML = timeInHours;
   }, 1000);
 }
 
