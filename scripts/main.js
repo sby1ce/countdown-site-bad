@@ -13,6 +13,18 @@ function getUnitOfTime (interval, unit) {
   // TODO: Also refactor this
 }
 
+function convertDateToString(dateObject, format) {
+  if (format === "dhms") {
+    const days = getUnitOfTime(distance, "day")
+    const hours = getUnitOfTime(distance, "hour")
+    const minutes = getUnitOfTime(distance, "minute")
+    const seconds = getUnitOfTime(distance, "second")
+    return days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+  } else {
+    return dateObject
+  }
+}
+
 function writeTimer(countdownElement) {
   // Set the date we're counting down to
   if (countdownElement === "trainDeparture") { 
@@ -24,7 +36,7 @@ function writeTimer(countdownElement) {
   } else if (countdownElement === "taxiArrival") {
     var countDownDate = new Date("Jul 29, 2023 21:56:00 UTC+0").getTime();
   } else if (countdownElement === "negativeTest") {
-    let countDownDate = new Date("2023-07-22 19:08:30 UTC+0").getTime();
+    var countDownDate = new Date("2023-07-22 19:08:30 UTC+0").getTime();
   }
   // TODO: Refactor this
   
@@ -41,15 +53,10 @@ function writeTimer(countdownElement) {
     var distance = countDownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
-    var days = getUnitOfTime(distance, "day")
-    var hours = getUnitOfTime(distance, "hour")
-    var minutes = getUnitOfTime(distance, "minute")
-    var seconds = getUnitOfTime(distance, "second")
+    var timeInDHMS = convertDateToString(distance, "dhms");
 
-    // const countdownElement = "train";
     // Display the result in the element with id="demo"
-    document.getElementById(countdownElement).innerHTML = days + "d " + hours + "h "
-    + minutes + "m " + seconds + "s ";
+    document.getElementById(countdownElement).innerHTML = timeInDHMS;
 
     // If the count down is finished, write some text
     // TODO: Negative countdown?
@@ -69,4 +76,5 @@ writeTimer("taxiArrival");
 const testDeparture = new Date("Jul 28, 2023 13:12:00 UTC+0").getTime();
 const testArrival = new Date("Jul 29, 2023 20:56:00 UTC+0").getTime();
 console.log((testArrival - testDeparture) / 1000 / 60)
+console.log()
 */
