@@ -3,26 +3,24 @@ function convertDateToString(interval, format) {
   let result = "";
 
   if (time < 0) {
-    // If the count down is finished, write some text
-    // TODO: negative countdown
-    return "EXPIRED";
+    result = "-";
+    time = -time;
   }
-
   if (format.includes("w ")) {
     result = result + (Math.floor(time / (1000 * 60 * 60 * 24 * 7)) + "w ");
-    time = time % (1000 * 60 * 60 * 24 * 7)
+    time = time % (1000 * 60 * 60 * 24 * 7);
   } 
   if (format.includes("d ")) {
     result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
-    time = time % (1000 * 60 * 60 * 24)
+    time = time % (1000 * 60 * 60 * 24);
   } 
   if (format.includes("h ")) {
     result = result + (Math.floor(time / (1000 * 60 * 60)) + "h ");
-    time = time % (1000 * 60 * 60)
+    time = time % (1000 * 60 * 60);
   } 
   if (format.includes("m ")) {
     result = result + (Math.floor(time / (1000 * 60)) + "m ");
-    time = time % (1000 * 60)
+    time = time % (1000 * 60);
   } 
   if (format.includes("s")) {
      result = result + (Math.floor(time / 1000) + "s ");
@@ -42,8 +40,10 @@ function writeTimer(countdownElement) {
     var countDownDate = new Date("Jul 28, 2023 12:12:00 UTC+0").getTime();
   } else if (countdownElement === "taxiArrival") {
     var countDownDate = new Date("Jul 29, 2023 21:56:00 UTC+0").getTime();
+  } else if (countdownElement === "start") {
+    var countDownDate = new Date("2023-07-17T21:00:00Z").getTime();
   } else if (countdownElement === "test") {
-    var countDownDate = new Date("2023-07-22 00:00:00 UTC+0").getTime();
+    var countDownDate = new Date("2023-07-17T21:00:00Z").getTime();
   }
   // TODO: Make automatic highlight of the smallest countdown
 
@@ -68,8 +68,6 @@ function writeTimer(countdownElement) {
       document.getElementById(countdownElement + "Hours").innerHTML = timeInHours;
     } catch (TypeError) {
       console.error("No Seconds/Hours element");
-      var a = new Date("2023-07-22T00:00:00Z")
-      console.log(a);
     }
   }, 1000);
 }
@@ -78,7 +76,8 @@ writeTimer("taxiDeparture");
 writeTimer("trainDeparture");
 writeTimer("trainArrival");
 writeTimer("taxiArrival");
-writeTimer("test")
+writeTimer("start");
+writeTimer("test");
 
 /*
 const testDeparture = new Date("Jul 28, 2023 13:12:00 UTC+0").getTime();
