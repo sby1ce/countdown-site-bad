@@ -26,7 +26,8 @@ function convertDateToString(interval, format) {
      result = result + (Math.floor(time / 1000) + "s ");
      time = time % 1000;
   }
-
+  // TODO: Refactor this, possibly use format as object rather than string
+  // and without mutable state(?)
   return result;
 }
 
@@ -41,7 +42,7 @@ function writeTimer(countdownElement) {
   } else if (countdownElement === "taxiArrival") {
     var countDownDate = new Date("Jul 29, 2023 21:56:00 UTC+0").getTime();
   } else if (countdownElement === "start") {
-    var countDownDate = new Date("2023-07-17T21:00:00Z").getTime();
+    var countDownDate = new Date("2023-07-17T19:00:00Z").getTime();
   } else if (countdownElement === "test") {
     var countDownDate = new Date("2023-07-17T21:00:00Z").getTime();
   }
@@ -56,22 +57,25 @@ function writeTimer(countdownElement) {
     var distance = countDownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
+    const dhms = {days: true, hours: true, minutes: true, seconds: true}
     var timeInDHMS = convertDateToString(distance, "d h m s ");
     var timeInSeconds = convertDateToString(distance, "s ");
     var timeInHours = convertDateToString(distance, "h ");
     // TODO: Optimize hour calculation
 
     // Display the result in the element
-    document.getElementById(countdownElement).innerHTML = timeInDHMS;
+    // TODO: Make adding elements entirely script-based
+    document.getElementById(countdownElement).textContent = timeInDHMS;
     try {
-      document.getElementById(countdownElement + "Seconds").innerHTML = timeInSeconds;
-      document.getElementById(countdownElement + "Hours").innerHTML = timeInHours;
+      document.getElementById(countdownElement + "Seconds").textContent = timeInSeconds;
+      document.getElementById(countdownElement + "Hours").textContent = timeInHours;
     } catch (TypeError) {
       console.error("No Seconds/Hours element");
     }
   }, 1000);
 }
 
+document.getElementById("taxiDeparture").textContent = "Timer AAAAAAAAAAAAAAAAAaaa";
 writeTimer("taxiDeparture");
 writeTimer("trainDeparture");
 writeTimer("trainArrival");
