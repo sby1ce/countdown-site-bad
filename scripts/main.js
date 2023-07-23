@@ -1,36 +1,25 @@
 function convertDateToString(interval, format) {
-  let time = interval;
-  let result = "";
+  const timeUnits = [
+    { key: 'weeks', divisor: 1000 * 60 * 60 * 24 * 7, suffix: 'w' },
+    { key: 'days', divisor: 1000 * 60 * 60 * 24, suffix: 'd' },
+    { key: 'hours', divisor: 1000 * 60 * 60, suffix: 'h' },
+    { key: 'minutes', divisor: 1000 * 60, suffix: 'm' },
+    { key: 'seconds', divisor: 1000, suffix: 's' },
+    { key: 'milliseconds', divisor: 1, suffix: 'ms' }
+  ];
 
-  if (time < 0) {
-    result = "-";
-    time = -time;
-  }
-  if (format['weeks']) {
-    result = result + (Math.floor(time / (1000 * 60 * 60 * 24 * 7)) + "w ");
-    time = time % (1000 * 60 * 60 * 24 * 7);
-  } 
-  if (format['days']) {
-    result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
-    time = time % (1000 * 60 * 60 * 24);
-  } 
-  if (format['hours']) {
-    result = result + (Math.floor(time / (1000 * 60 * 60)) + "h ");
-    time = time % (1000 * 60 * 60);
-  } 
-  if (format['minutes']) {
-    result = result + (Math.floor(time / (1000 * 60)) + "m ");
-    time = time % (1000 * 60);
-  } 
-  if (format['seconds']) {
-     result = result + (Math.floor(time / 1000) + "s ");
-     time = time % 1000;
-  }
-  if (format['milliseconds']) {
-    result = result + (time + "ms");
-  }
-  return result;
+  const result = timeUnits.reduce((acc, unit) => {
+    if (format[unit.key]) {
+      const value = Math.abs(Math.floor(interval / unit.divisor));
+      interval %= unit.divisor;
+      return acc + (value + unit.suffix + ' ');
+    }
+    return acc;
+  }, '');
+
+  return interval < 0 ? `-${result}` : result.trim();
 }
+
 
 function writeTimer(countdownElement) {
   // Set the date we're counting down to
