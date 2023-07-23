@@ -6,28 +6,29 @@ function convertDateToString(interval, format) {
     result = "-";
     time = -time;
   }
-  if (format.includes("w ")) {
+  if (format['weeks']) {
     result = result + (Math.floor(time / (1000 * 60 * 60 * 24 * 7)) + "w ");
     time = time % (1000 * 60 * 60 * 24 * 7);
   } 
-  if (format.includes("d ")) {
+  if (format['days']) {
     result = result + (Math.floor(time / (1000 * 60 * 60 * 24)) + "d ");
     time = time % (1000 * 60 * 60 * 24);
   } 
-  if (format.includes("h ")) {
+  if (format['hours']) {
     result = result + (Math.floor(time / (1000 * 60 * 60)) + "h ");
     time = time % (1000 * 60 * 60);
   } 
-  if (format.includes("m ")) {
+  if (format['minutes']) {
     result = result + (Math.floor(time / (1000 * 60)) + "m ");
     time = time % (1000 * 60);
   } 
-  if (format.includes("s")) {
+  if (format['seconds']) {
      result = result + (Math.floor(time / 1000) + "s ");
      time = time % 1000;
   }
-  // TODO: Refactor this, possibly use format as object rather than string
-  // and without mutable state(?)
+  if (format['milliseconds']) {
+    result = result + (time + "ms");
+  }
   return result;
 }
 
@@ -57,10 +58,9 @@ function writeTimer(countdownElement) {
     var distance = countDownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
-    const dhms = {days: true, hours: true, minutes: true, seconds: true}
-    var timeInDHMS = convertDateToString(distance, "d h m s ");
-    var timeInSeconds = convertDateToString(distance, "s ");
-    var timeInHours = convertDateToString(distance, "h ");
+    var timeInDHMS = convertDateToString(distance, dhms);
+    var timeInSeconds = convertDateToString(distance, {'seconds': true});
+    var timeInHours = convertDateToString(distance, {'hours': true});
     // TODO: Optimize hour calculation
 
     // Display the result in the element
@@ -75,7 +75,8 @@ function writeTimer(countdownElement) {
   }, 1000);
 }
 
-document.getElementById("taxiDeparture").textContent = "Timer AAAAAAAAAAAAAAAAAaaa";
+const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true}
+document.getElementById("test").textContent = "AAAAAAAAAAAAAAAAA";
 writeTimer("taxiDeparture");
 writeTimer("trainDeparture");
 writeTimer("trainArrival");
