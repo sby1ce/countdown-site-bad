@@ -13,7 +13,7 @@ let timers = {
   'taxiArrival': new Date("Jul 29, 2023 21:56:00 UTC+0"),
   'start': new Date("2023-07-17T19:00:00Z"),
   'test': new Date("2023-07-17T21:00:00Z")
-}
+};
 
 const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true};
 
@@ -32,7 +32,7 @@ function convertDateToString(interval, format) {
 
 function writeTimer(countdownElement) {
   // Set the date we're counting down to
-  const countDownDate = timers[countdownElement]
+  const countDownDate = timers[countdownElement].getTime();
   // TODO: Make automatic highlight of the smallest countdown
 
   // Update the count down every 1 second
