@@ -17,6 +17,14 @@ let timers = {
 
 const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true};
 
+function addTimer(name, dateString) {
+  timers[name] = new Date(dateString);
+  // TODO?: Do something about timers being a global variable
+ const main = document.querySelector('main')
+ console.log(main)
+
+}
+
 function convertDateToString(interval, format) {
   const result = timeUnits.reduce((acc, unit) => {
     if (format[unit.key]) {
@@ -36,17 +44,17 @@ function writeTimer(countdownElement) {
   // TODO: Make automatic highlight of the smallest countdown
 
   // Update the count down every 1 second
-  var x = setInterval( () => {
+  const x = setInterval( () => {
     // Get today's date and time
-    var now = new Date().getTime();
+    const now = new Date().getTime();
 
     // Find the distance between now and the count down date
-    var distance = countDownDate - now;
+    const distance = countDownDate - now;
 
     // Time calculations for days, hours, minutes and seconds
-    var timeInDHMS = convertDateToString(distance, dhms);
-    var timeInSeconds = convertDateToString(distance, {'seconds': true});
-    var timeInHours = convertDateToString(distance, {'hours': true});
+    const timeInDHMS = convertDateToString(distance, dhms);
+    const timeInSeconds = convertDateToString(distance, {'seconds': true});
+    const timeInHours = convertDateToString(distance, {'hours': true});
     // TODO: Optimize hour calculation
 
     // Display the result in the element
@@ -63,12 +71,12 @@ function writeTimer(countdownElement) {
   }, 1000);
 }
 
-document.getElementById("test").textContent = "AAAAAAAAAAAAAAAAA";
 writeTimer("taxiDeparture");
 writeTimer("trainDeparture");
 writeTimer("trainArrival");
 writeTimer("taxiArrival");
 writeTimer("start");
+document.getElementById("test").textContent = "AAAAAAAAAAAAAAAAA";
 writeTimer("test");
 
 /*
