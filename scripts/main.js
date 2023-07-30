@@ -4,7 +4,6 @@
 // or maybe refactor the way timers are launched in the first place
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
-// TODO?: Do something about timers being a global variable
 // TODO: change button into text input with hints for time input
 // TODO: add selecting time not by string but by some calendar/clock element?
 // TODO: Make automatic highlight of the smallest countdown
@@ -29,15 +28,15 @@ const timeUnits = [
   { key: 'seconds', divisor: 1000, suffix: 's' },
   { key: 'milliseconds', divisor: 1, suffix: 'ms' }
 ];
-let timers = {
-  'taxiDeparture': new Date("Jul 28, 2023 10:30:00 UTC+0"),
-  'trainDeparture': new Date("Jul 28, 2023 13:12:00 UTC+0"),
-  'trainArrival': new Date("Jul 29, 2023 20:56:00 UTC+0"),
-  'taxiArrivalArrival': new Date("Jul 29, 2023 21:20:00 UTC+0"),
-  'taxiArrival': new Date("Jul 29, 2023 22:00:00 UTC+0"),
-  'start': new Date("2023-07-17T19:00:00Z"),
-  'test': new Date("2023-07-17T21:00:00Z")
-};
+const timers = new Map();
+timers.set('taxiDeparture', new Date("Jul 28, 2023 10:30:00 UTC+0"));
+timers.set('trainDeparture', new Date("Jul 28, 2023 13:12:00 UTC+0"));
+timers.set('trainArrival', new Date("Jul 29, 2023 20:56:00 UTC+0"));
+timers.set('taxiArrivalArrival', new Date("Jul 29, 2023 21:20:00 UTC+0"));
+timers.set('taxiArrival', new Date("Jul 29, 2023 22:00:00 UTC+0"));
+timers.set('start', new Date("2023-07-17T19:00:00Z"));
+timers.set('test', new Date("2023-07-17T21:00:00Z"));
+
 // Timer button needs to be initialized here because it is used for inserting elements
 const addTimerButton = document.querySelector('#addTimerButton');
 const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true};
@@ -71,7 +70,7 @@ function addTimer(timerName, dateString) {
   const innerName = timerName.replaceAll(' ', '_');
   const newTimer = new Date(dateString);
   
-  timers[innerName] = newTimer;
+  timers.set(innerName, newTimer);
 
   if (document.querySelector(`#${innerName}`)) {
     alert(`Timer with the innerName ${timerName} was replaced`);
@@ -99,7 +98,7 @@ function updateTimers() {
   const now = new Date().getTime();
 
   for (const timer in timers) {
-    const distance = timers[timer].getTime() - now;
+    const distance = timers.get(timer).getTime() - now;
 
     const timeIn = '';
   }
@@ -107,7 +106,7 @@ function updateTimers() {
 
 function writeTimer(innerName) {
   // Set the date we're counting down to
-  const countDownDate = timers[innerName].getTime();
+  const countDownDate = timers.get(innerName).getTime();
 
   // Update the count down every 1 second
   const x = setInterval(() => {
