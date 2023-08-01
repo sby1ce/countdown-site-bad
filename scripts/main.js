@@ -1,7 +1,8 @@
 // TODO: Organize these TODOs
 // TODO: Add delete timer function
-// TODO: Add async to main() 
-// or maybe refactor the way timers are launched in the first place
+// TODO: Remake the way add timer button looks
+// TODO: Add option to choose formats
+// TODO: Refactor the way timers are launched
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
 // TODO: add selecting time not by string but by some calendar/clock element?
@@ -54,14 +55,35 @@ function createTimer(timerName) {
   const timerElementHours = document.createElement('p');
   timerElement.id = `${innerName}`;
   timerWrapper.appendChild(timerElement);
-  
   timerElementSeconds.id = `${innerName}Seconds`;
   timerWrapper.appendChild(timerElementSeconds);
   timerElementHours.id = `${innerName}Hours`;
   timerWrapper.appendChild(timerElementHours);
 
   addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
-  writeTimer(innerName);
+
+  // Set the date we're counting down to
+  const countDownDate = timers.get(innerName).getTime();
+
+  // Update the count down every 1 second
+  const x = setInterval(() => {
+    // Get today's date and time
+    const now = new Date().getTime();
+
+    // Find the distance between now and the count down date
+    const distance = countDownDate - now;
+
+    // Time calculations for days, hours, minutes and seconds
+    const timeInDHMS = convertDateToString(distance, dhms);
+    const timeInSeconds = convertDateToString(distance, { 'seconds': true });
+    const timeInHours = convertDateToString(distance, { 'hours': true });
+
+    // Display the result in the element
+    document.getElementById(innerName).textContent = timeInDHMS;
+    document.getElementById(innerName + "Seconds").textContent = timeInSeconds;
+    document.getElementById(innerName + "Hours").textContent = timeInHours;
+
+  }, 1000);
 }
 
 function addTimer(timerName, dateString) {
@@ -76,7 +98,6 @@ function addTimer(timerName, dateString) {
   }
 
   createTimer(timerName);
-  // console.log('Called add timer function');
 }
 
 function convertDateToString(interval, format) {
@@ -92,39 +113,12 @@ function convertDateToString(interval, format) {
   return interval < 0 ? `-${result}` : result.trim();
 }
 
-function updateTimers() {
+function writeTimers() {
   const now = new Date().getTime();
-
-  for (const timer in timers) {
-    const distance = timers.get(timer).getTime() - now;
-
-    const timeIn = '';
+  
+  for (const [timerName, timerDate] of timers.entries()) {
+    createTimer(timerName);
   }
-}
-
-function writeTimer(innerName) {
-  // Set the date we're counting down to
-  const countDownDate = timers.get(innerName).getTime();
-
-  // Update the count down every 1 second
-  const x = setInterval(() => {
-    // Get today's date and time
-    const now = new Date().getTime();
-  
-    // Find the distance between now and the count down date
-    const distance = countDownDate - now;
-  
-    // Time calculations for days, hours, minutes and seconds
-    const timeInDHMS = convertDateToString(distance, dhms);
-    const timeInSeconds = convertDateToString(distance, {'seconds': true});
-    const timeInHours = convertDateToString(distance, {'hours': true});
-  
-    // Display the result in the element
-    document.getElementById(innerName).textContent = timeInDHMS;
-    document.getElementById(innerName + "Seconds").textContent = timeInSeconds;
-    document.getElementById(innerName + "Hours").textContent = timeInHours;
-    
-  }, 1000);
 }
 
 function main() {
@@ -133,9 +127,9 @@ function main() {
     const timerDateField = document.querySelector('#addTimerDate');
     addTimer(timerNameField.value, timerDateField.value); 
   };
-  
-  for (const timer in timers) {
-    createTimer(timer);
+
+  for (const [timerName, timerDate] of timers.entries()) {
+    createTimer(timerName);
   }
   // document.getElementById("test").textContent = "AAAAAAAAAAAAAAAAA";
 }
