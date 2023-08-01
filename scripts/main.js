@@ -4,7 +4,6 @@
 // or maybe refactor the way timers are launched in the first place
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
-// TODO: change button into text input with hints for time input
 // TODO: add selecting time not by string but by some calendar/clock element?
 // TODO: Make automatic highlight of the smallest countdown
 // TODO: Add changing timer priority like Steam wishlist
@@ -17,7 +16,6 @@
 // possibly use hashes?
 // TODO?: Related, make elements into iframes, 
 // so that the selection of the timer text persists
-// TODO: parse CSS through validator
     
 
 const timeUnits = [
@@ -130,7 +128,12 @@ function writeTimer(innerName) {
 }
 
 function main() {
-  addTimerButton.onclick = () => { addTimer("Test1", "2023-07-17T21:00:00Z") };
+  addTimerButton.onclick = () => { 
+    const timerNameField = document.querySelector('#addTimerName');
+    const timerDateField = document.querySelector('#addTimerDate');
+    addTimer(timerNameField.value, timerDateField.value); 
+  };
+  
   for (const timer in timers) {
     createTimer(timer);
   }
