@@ -1,5 +1,4 @@
 // TODO: Organize these TODOs
-// TODO: Add delete timer function
 // TODO: Remake the way add timer button looks
 // TODO: Add option to choose formats
 // TODO: Refactor the way timers are launched
@@ -60,13 +59,24 @@ function createTimer(timerName) {
   timerElementHours.id = `${innerName}Hours`;
   timerWrapper.appendChild(timerElementHours);
 
+  const timerDeleteButton = document.createElement('button');
+  timerDeleteButton.classList.add('deleteTimer');
+  timerDeleteButton.id = `${innerName}DeleteButton`;
+  timerDeleteButton.textContent = 'Delete timer';
+  timerWrapper.appendChild(timerDeleteButton);
+  timerDeleteButton.onclick = () => {
+    timers.delete(innerName);
+    timerWrapper.remove();
+    timerTitle.remove();
+  };
+
   addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
 
   // Set the date we're counting down to
   const countDownDate = timers.get(innerName).getTime();
 
   // Update the count down every 1 second
-  const x = setInterval(() => {
+  const timerInterval = setInterval(() => {
     // Get today's date and time
     const now = new Date().getTime();
 
@@ -79,9 +89,13 @@ function createTimer(timerName) {
     const timeInHours = convertDateToString(distance, { 'hours': true });
 
     // Display the result in the element
-    document.getElementById(innerName).textContent = timeInDHMS;
-    document.getElementById(innerName + "Seconds").textContent = timeInSeconds;
-    document.getElementById(innerName + "Hours").textContent = timeInHours;
+    try {
+      document.getElementById(innerName).textContent = timeInDHMS;
+      document.getElementById(innerName + "Seconds").textContent = timeInSeconds;
+      document.getElementById(innerName + "Hours").textContent = timeInHours;
+    } catch(TypeError) {
+      clearInterval(timerInterval);
+    }
 
   }, 1000);
 }
@@ -89,6 +103,10 @@ function createTimer(timerName) {
 function addTimer(timerName, dateString) {
   const innerName = timerName.replaceAll(' ', '_');
   const newTimer = new Date(dateString);
+
+  if (innerName === '' || dateString === '') {
+    return null;
+  }
   
   timers.set(innerName, newTimer);
 

@@ -5,6 +5,14 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+button, /* https://developer.mozilla.org/en-US/docs/Learn/CSS/Building_blocks/Images_media_form_elements */
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -51,7 +59,7 @@ h1, p {
   background-color: #222222;
   color: #bbbbbb; 
   block-size: 100px;
-  border-radius: 5px;
+  border-radius: 15px;
 }
 
 #addTimerButton:hover {
@@ -61,11 +69,18 @@ h1, p {
 #addTimerName {
   font-size: 20px;
   block-size: 50px;
-  border-radius: 5px 5px 0px 0px;
+  border-radius: 15px 15px 0px 0px;
 }
 
 #addTimerDate {
   font-size: 15px;
   block-size: 50px;
-  border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 15px 15px;
+}
+
+.deleteTimer {
+  background-color: #222222;
+  color: #bbbbbb;
+  box-sizing: border-box;
+  border-radius: 5px;
 }
