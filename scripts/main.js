@@ -38,7 +38,10 @@ timers.set('test', new Date("2023-07-17T21:00:00Z"));
 // Timer button needs to be initialized here because it is used for inserting elements
 const addTimerButton = document.querySelector('#addTimerButton');
 const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true};
-
+const [hoursTimezoneOffset, minutesTimezoneOffset] = (() => {
+  const timezoneOffset = new Date().getTimezoneOffset();
+  return [String(Math.floor(timezoneOffset / 60)).padStart(2, '0'), String(timezoneOffset % 60).padStart(2, '0')];
+})();
 
 function createTimer(timerName) {
   const timerTitle = document.createElement('h1');
@@ -64,10 +67,39 @@ function createTimer(timerName) {
   timerDeleteButton.id = `${innerName}DeleteButton`;
   timerDeleteButton.textContent = 'Delete timer';
   timerWrapper.appendChild(timerDeleteButton);
+
+  let deleteConfirmation = false;
   timerDeleteButton.onclick = () => {
-    timers.delete(innerName);
-    timerWrapper.remove();
-    timerTitle.remove();
+    if (!deleteConfirmation) {
+      deleteConfirm = document.createElement('button');
+      deleteConfirm.classList.add('deleteTimer');
+      deleteConfirm.id = `${innerName}DeleteConfirm`;
+      deleteConfirm.textContent = 'Confirm';
+
+      deleteCancel = document.createElement('button');
+      deleteCancel.classList.add('deleteTimer');
+      deleteCancel.id = `${innerName}DeleteCancel`;
+      deleteCancel.textContent = 'Cancel';
+
+      timerWrapper.appendChild(deleteConfirm);
+      timerWrapper.appendChild(deleteCancel);
+
+      deleteConfirmation = true;
+
+      deleteConfirm.onclick = () => {
+        // I'd also remove the event listener itself here, 
+        // but it's too much effort to pass specific functions to removeEventListener
+        timers.delete(innerName);
+        timerWrapper.remove();
+        timerTitle.remove();
+      };
+
+      deleteCancel.onclick = () => {
+        deleteConfirmation = false;
+        deleteConfirm.remove();
+        deleteCancel.remove();
+      };
+    }
   };
 
   addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
@@ -102,12 +134,13 @@ function createTimer(timerName) {
 
 function addTimer(timerName, dateString) {
   const innerName = timerName.replaceAll(' ', '_');
-  const newTimer = new Date(dateString);
+  const newTimer = dateString.endsWith('Z') || dateString[dateString.length - 3] === ':' ? 
+    new Date(dateString) : new Date(`${dateString}+${hoursTimezoneOffset}:${minutesTimezoneOffset}`);
 
-  if (innerName === '' || dateString === '') {
+  if (innerName === '' || dateString === '' || (newTimer.toString() === 'Invalid Date')) {
     return null;
   }
-  
+
   timers.set(innerName, newTimer);
 
   if (document.querySelector(`#${innerName}`)) {
@@ -142,7 +175,7 @@ function writeTimers() {
 function main() {
   addTimerButton.onclick = () => { 
     const timerNameField = document.querySelector('#addTimerName');
-    const timerDateField = document.querySelector('#addTimerDate');
+    const timerDateField = document.querySelector('#addTimerDateString');
     addTimer(timerNameField.value, timerDateField.value); 
   };
 

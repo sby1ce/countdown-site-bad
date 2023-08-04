@@ -72,7 +72,7 @@ h1, p {
   border-radius: 15px 15px 0px 0px;
 }
 
-#addTimerDate {
+#addTimerDateString {
   font-size: 15px;
   block-size: 50px;
   border-radius: 0px 0px 15px 15px;
