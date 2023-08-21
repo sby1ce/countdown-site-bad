@@ -4,14 +4,12 @@
 // TODO: Refactor the way timers are launched
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
-// TODO: add selecting time not by string but by some calendar/clock element?
 // TODO: Make automatic highlight of the smallest countdown
-// TODO: Add changing timer priority like Steam wishlist
+// TODO: Add changing timer priority like Steam wishlist (used to be. RIP)
 // TODO: Optimize hour calculation
 // TODO: Refactor this to add elements through addTimer() from array
 // from localStorage
 // TODO: Add button to save/load timers into localStorage
-// TODO: Port button to clear localStorage
 // TODO: Make timerName => innerName conversion prettier
 // possibly use hashes?
 // TODO?: Related, make elements into iframes, 
@@ -174,15 +172,27 @@ function writeTimers() {
 }
 
 function main() {
-  addTimerButton.addEventListener("click", () => {
-    const timerNameField = document.querySelector('#addTimerName');
-    const timerDateField = document.querySelector('#addTimerDateString');
-    addTimer(timerNameField.value, timerDateField.value);
-  });
-
   for (const [timerName, timerDate] of timers.entries()) {
     createTimer(timerName);
   }
+
+  addTimerButton.addEventListener("click", () => {
+    const timerNameField = document.querySelector('#addTimerName');
+    const timerDateTime = document.querySelector('#addTimerDateTime');
+    const timerDateField = document.querySelector('#addTimerDateString');
+    
+    if (timerDateTime.value) {
+      addTimer(timerNameField.value, timerDateTime.value);
+      timerNameField.value = "";
+      timerDateTime.value = "";
+      timerDateField.value = "";
+    } else if (timerDateField.value) {
+      addTimer(timerNameField.value, timerDateField.value);
+      timerNameField.value = "";
+      timerDateTime.value = "";
+      timerDateField.value = "";
+    }
+  });
   // document.getElementById("test").textContent = "AAAAAAAAAAAAAAAAA";
 }
 
