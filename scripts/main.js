@@ -69,38 +69,39 @@ function createTimer(timerName) {
   timerWrapper.appendChild(timerDeleteButton);
 
   let deleteConfirmation = false;
-  timerDeleteButton.onclick = () => {
-    if (!deleteConfirmation) {
-      deleteConfirm = document.createElement('button');
-      deleteConfirm.classList.add('deleteTimer');
-      deleteConfirm.id = `${innerName}DeleteConfirm`;
-      deleteConfirm.textContent = 'Confirm';
-
-      deleteCancel = document.createElement('button');
-      deleteCancel.classList.add('deleteTimer');
-      deleteCancel.id = `${innerName}DeleteCancel`;
-      deleteCancel.textContent = 'Cancel';
-
-      timerWrapper.appendChild(deleteConfirm);
-      timerWrapper.appendChild(deleteCancel);
-
-      deleteConfirmation = true;
-
-      deleteConfirm.onclick = () => {
-        // I'd also remove the event listener itself here, 
-        // but it's too much effort to pass specific functions to removeEventListener
-        timers.delete(innerName);
-        timerWrapper.remove();
-        timerTitle.remove();
-      };
-
-      deleteCancel.onclick = () => {
-        deleteConfirmation = false;
-        deleteConfirm.remove();
-        deleteCancel.remove();
-      };
+  timerDeleteButton.addEventListener("click", () => {
+    if (deleteConfirmation) {
+      return;
     }
-  };
+    deleteConfirm = document.createElement('button');
+    deleteConfirm.classList.add('deleteTimer');
+    deleteConfirm.id = `${innerName}DeleteConfirm`;
+    deleteConfirm.textContent = 'Confirm';
+
+    deleteCancel = document.createElement('button');
+    deleteCancel.classList.add('deleteTimer');
+    deleteCancel.id = `${innerName}DeleteCancel`;
+    deleteCancel.textContent = 'Cancel';
+
+    timerWrapper.appendChild(deleteConfirm);
+    timerWrapper.appendChild(deleteCancel);
+
+    deleteConfirmation = true;
+
+    deleteConfirm.addEventListener("click", () => {
+      // I'd also remove the event listener itself here, 
+      // but it's too much effort to pass specific functions to removeEventListener
+      timers.delete(innerName);
+      timerWrapper.remove();
+      timerTitle.remove();
+    });
+
+    deleteCancel.addEventListener("click", () => {
+      deleteConfirmation = false;
+      deleteConfirm.remove();
+      deleteCancel.remove();
+    });
+  });
 
   addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
 
@@ -173,11 +174,11 @@ function writeTimers() {
 }
 
 function main() {
-  addTimerButton.onclick = () => { 
+  addTimerButton.addEventListener("click", () => {
     const timerNameField = document.querySelector('#addTimerName');
     const timerDateField = document.querySelector('#addTimerDateString');
-    addTimer(timerNameField.value, timerDateField.value); 
-  };
+    addTimer(timerNameField.value, timerDateField.value);
+  });
 
   for (const [timerName, timerDate] of timers.entries()) {
     createTimer(timerName);

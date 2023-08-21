@@ -44,6 +44,19 @@ h1, p {
   margin: 10px;
 }
 
+footer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+footer button {
+  margin: 10px;
+  background-color: #222222;
+  color: #bbbbbb;
+}
+
 .addTimer {
   justify-content: center;
   align-self: center;
@@ -78,9 +91,15 @@ h1, p {
   border-radius: 0px 0px 15px 15px;
 }
 
+#addTimerDateTime {
+  block-size: 50px;
+  /* Weird borders on this input type */
+  inline-size: 300px;
+  border-radius: 0px;
+}
+
 .deleteTimer {
   background-color: #222222;
   color: #bbbbbb;
-  box-sizing: border-box;
   border-radius: 5px;
 }
