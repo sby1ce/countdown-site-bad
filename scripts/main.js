@@ -1,21 +1,18 @@
 // TODO: Organize these TODOs
+// TODO: Change timers back to object to JSON.stringify it into localStorage
 // TODO: Remake the way add timer button looks
 // TODO: Add option to choose formats
-// TODO: Refactor the way timers are launched
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
 // TODO: Make automatic highlight of the smallest countdown
 // TODO: Add changing timer priority like Steam wishlist (used to be. RIP)
 // TODO: Optimize hour calculation
-// TODO: Refactor this to add elements through addTimer() from array
-// from localStorage
 // TODO: Add button to save/load timers into localStorage
-// TODO: Make timerName => innerName conversion prettier
-// possibly use hashes?
 // TODO?: Related, make elements into iframes, 
 // so that the selection of the timer text persists
     
 
+"use strict";
 const timeUnits = [
   { key: 'weeks', divisor: 1000 * 60 * 60 * 24 * 7, suffix: 'w' },
   { key: 'days', divisor: 1000 * 60 * 60 * 24, suffix: 'd' },
@@ -24,14 +21,10 @@ const timeUnits = [
   { key: 'seconds', divisor: 1000, suffix: 's' },
   { key: 'milliseconds', divisor: 1, suffix: 'ms' }
 ];
-const timers = new Map();
-timers.set('taxiDeparture', new Date("Jul 28, 2023 10:30:00 UTC+0"));
-timers.set('trainDeparture', new Date("Jul 28, 2023 13:12:00 UTC+0"));
-timers.set('trainArrival', new Date("Jul 29, 2023 20:56:00 UTC+0"));
-timers.set('taxiArrivalArrival', new Date("Jul 29, 2023 21:20:00 UTC+0"));
-timers.set('taxiArrival', new Date("Jul 29, 2023 22:00:00 UTC+0"));
-timers.set('start', new Date("2023-07-17T19:00:00Z"));
-timers.set('test', new Date("2023-07-17T21:00:00Z"));
+const timers = {
+  [timerNameToHash('A')]: [new Date("2020-12-02T20:00:00Z"), 'A'], 
+  [timerNameToHash('B')]: [new Date("2022-02-24T01:00:00Z"), 'B']
+};
 
 // Timer button needs to be initialized here because it is used for inserting elements
 const addTimerButton = document.querySelector('#addTimerButton');
@@ -41,13 +34,14 @@ const [hoursTimezoneOffset, minutesTimezoneOffset] = (() => {
   return [String(Math.floor(timezoneOffset / 60)).padStart(2, '0'), String(timezoneOffset % 60).padStart(2, '0')];
 })();
 
-function createTimer(timerName) {
+function createTimer(timerName, innerName) {
+  // const timerName = timers[innerName][1];
   const timerTitle = document.createElement('h1');
   const timerTitleText = document.createTextNode(timerName);
   timerTitle.appendChild(timerTitleText);
   addTimerButton.insertAdjacentElement('beforebegin', timerTitle);
 
-  const innerName = timerName.replaceAll(' ', '_');
+  // const innerName = timerNameToHash(timerName);
   const timerWrapper = document.createElement('div');
   timerWrapper.classList.add('wrapper');
   const timerElement = document.createElement('p');
@@ -66,17 +60,16 @@ function createTimer(timerName) {
   timerDeleteButton.textContent = 'Delete timer';
   timerWrapper.appendChild(timerDeleteButton);
 
-  let deleteConfirmation = false;
   timerDeleteButton.addEventListener("click", () => {
-    if (deleteConfirmation) {
+    if (timerDeleteButton.disabled) {
       return;
     }
-    deleteConfirm = document.createElement('button');
+    const deleteConfirm = document.createElement('button');
     deleteConfirm.classList.add('deleteTimer');
     deleteConfirm.id = `${innerName}DeleteConfirm`;
     deleteConfirm.textContent = 'Confirm';
 
-    deleteCancel = document.createElement('button');
+    const deleteCancel = document.createElement('button');
     deleteCancel.classList.add('deleteTimer');
     deleteCancel.id = `${innerName}DeleteCancel`;
     deleteCancel.textContent = 'Cancel';
@@ -84,70 +77,77 @@ function createTimer(timerName) {
     timerWrapper.appendChild(deleteConfirm);
     timerWrapper.appendChild(deleteCancel);
 
-    deleteConfirmation = true;
+    timerDeleteButton.disabled = true;
 
     deleteConfirm.addEventListener("click", () => {
       // I'd also remove the event listener itself here, 
       // but it's too much effort to pass specific functions to removeEventListener
-      timers.delete(innerName);
+      deleteTimer(innerName);
       timerWrapper.remove();
       timerTitle.remove();
     });
 
     deleteCancel.addEventListener("click", () => {
-      deleteConfirmation = false;
+      timerDeleteButton.disabled = false;
       deleteConfirm.remove();
       deleteCancel.remove();
     });
   });
 
   addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
+}
 
-  // Set the date we're counting down to
-  const countDownDate = timers.get(innerName).getTime();
+function timerNameToHash(name) {
+  return `timer${Array.from(name).reduce((hash, char) => 0 | (31 * hash + char.charCodeAt(0)), 0)}`;
+}
 
-  // Update the count down every 1 second
-  const timerInterval = setInterval(() => {
+function setTimers() {
+  const intervalName = setInterval(() => {
     // Get today's date and time
     const now = new Date().getTime();
 
-    // Find the distance between now and the count down date
-    const distance = countDownDate - now;
-
-    // Time calculations for days, hours, minutes and seconds
-    const timeInDHMS = convertDateToString(distance, dhms);
-    const timeInSeconds = convertDateToString(distance, { 'seconds': true });
-    const timeInHours = convertDateToString(distance, { 'hours': true });
-
-    // Display the result in the element
-    try {
-      document.getElementById(innerName).textContent = timeInDHMS;
-      document.getElementById(innerName + "Seconds").textContent = timeInSeconds;
-      document.getElementById(innerName + "Hours").textContent = timeInHours;
-    } catch(TypeError) {
-      clearInterval(timerInterval);
+    for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
+      updateTimer(innerName, now, timerDate.getTime());
     }
-
-  }, 1000);
+  }, 1000)
 }
 
-function addTimer(timerName, dateString) {
-  const innerName = timerName.replaceAll(' ', '_');
-  const newTimer = dateString.endsWith('Z') || dateString[dateString.length - 3] === ':' ? 
-    new Date(dateString) : new Date(`${dateString}+${hoursTimezoneOffset}:${minutesTimezoneOffset}`);
+function updateTimer(innerName, now, countDownDate) {
+  // Find the distance between now and the count down date
+  const distance = countDownDate - now;
 
+  // Time calculations for days, hours, minutes and seconds
+  const timeInDHMS = convertDateToString(distance, dhms);
+  const timeInSeconds = convertDateToString(distance, { 'seconds': true });
+  const timeInHours = convertDateToString(distance, { 'hours': true });
+
+  // Display the result in the element
+  document.querySelector(`#${innerName}`).textContent = timeInDHMS;
+  document.querySelector(`#${innerName}Seconds`).textContent = timeInSeconds;
+  document.querySelector(`#${innerName}Hours`).textContent = timeInHours;
+}
+
+function addTimerNew(timerName, dateString) {
+  const innerName = timerNameToHash(timerName);
+  const newTimer = dateString.endsWith('Z') || dateString[dateString.length - 3] === ':' ?
+    new Date(dateString) : new Date(`${dateString}+${hoursTimezoneOffset}:${minutesTimezoneOffset}`);
+  
   if (innerName === '' || dateString === '' || (newTimer.toString() === 'Invalid Date')) {
     return null;
   }
 
-  timers.set(innerName, newTimer);
+  timers[innerName] = [newTimer, timerName];
 
   if (document.querySelector(`#${innerName}`)) {
     alert(`Timer with the innerName ${timerName} was replaced`);
     return null;
   }
 
-  createTimer(timerName);
+  createTimer(timerName, innerName);
+}
+
+function deleteTimer(innerName) {
+  delete timers[innerName];
 }
 
 function convertDateToString(interval, format) {
@@ -163,18 +163,12 @@ function convertDateToString(interval, format) {
   return interval < 0 ? `-${result}` : result.trim();
 }
 
-function writeTimers() {
-  const now = new Date().getTime();
-  
-  for (const [timerName, timerDate] of timers.entries()) {
-    createTimer(timerName);
-  }
-}
-
 function main() {
-  for (const [timerName, timerDate] of timers.entries()) {
-    createTimer(timerName);
+  // TODO: this is temporary
+  for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
+    createTimer(timerName, innerName);
   }
+  setTimers();
 
   addTimerButton.addEventListener("click", () => {
     const timerNameField = document.querySelector('#addTimerName');
@@ -182,12 +176,13 @@ function main() {
     const timerDateField = document.querySelector('#addTimerDateString');
     
     if (timerDateTime.value) {
-      addTimer(timerNameField.value, timerDateTime.value);
+      // This adding of seconds and timezone shouldn't be necessary but copium
+      addTimerNew(timerNameField.value, `${timerDateTime.value}:00Z`);
       timerNameField.value = "";
       timerDateTime.value = "";
       timerDateField.value = "";
     } else if (timerDateField.value) {
-      addTimer(timerNameField.value, timerDateField.value);
+      addTimerNew(timerNameField.value, timerDateField.value);
       timerNameField.value = "";
       timerDateTime.value = "";
       timerDateField.value = "";
