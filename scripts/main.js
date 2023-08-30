@@ -22,7 +22,8 @@ const timeUnits = [
 ];
 const timers = {
   [timerNameToHash('A')]: [new Date("2020-12-02T20:00:00Z"), 'A'], 
-  [timerNameToHash('B')]: [new Date("2022-02-24T01:00:00Z"), 'B']
+  [timerNameToHash('B')]: [new Date("2022-02-24T01:00:00Z"), 'B'],
+  [timerNameToHash('C')]: [new Date("2023-06-28T12:00:00Z"), 'C']
 };
 
 // Timer wrapper is initialized here because it is used for inserting elements
