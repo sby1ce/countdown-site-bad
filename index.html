@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
+    <meta charset="utf-8">
     <title>Countdown</title>
     <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="scripts/main.js" defer></script>
+    <script src="scripts/main.js" defer=""></script>
     <link href="styles/style.css" rel="stylesheet">
   </head>
   <body>
@@ -19,16 +20,19 @@
         <p id="sampleSeconds">3723s</p>
         <p id="sampleHours">1h</p>
       </div> -->
-
-      <button id="addTimerButton" class="addTimer">Add timer</button> 
-      <input id="addTimerName" class="addTimer" placeholder="New timer"></input>
-      <input id="addTimerDateTime" type="datetime-local" class="addTimer"></input>
-      <input id="addTimerDateString" class="addTimer" placeholder="2020-12-02T20:00:00Z"></input>
+      <div class="wrapper" id="addTimerWrapper">
+        <div class="wrapper" id="addTimerInput">
+          <input id="addTimerName" class="addTimer" placeholder="New timer"></input>
+          <input name="addTimerDateTime" id="addTimerDateTime" type="datetime-local" class="addTimer"></input>
+          <input id="addTimerDateString" class="addTimer" placeholder="2020-12-02T20:00:00Z"></input>
+        </div>
+        <button type="button" id="addTimerButton" class="addTimer">Add timer</button>
+      </div>
     </main>
     <hr>
     <footer>
-      <button id="deleteLocalStorage">Delete localStorage</button>
-      <button id="showLoclaStorage">Get localStorage as text WIP</button>
+      <button type="button" id="deleteLocalStorage">Delete localStorage</button>
+      <button type="button" id="showLoclaStorage">Get localStorage as text WIP</button>
     </footer>
   </body>
 </html>

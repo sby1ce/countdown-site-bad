@@ -1,6 +1,5 @@
 // TODO: Organize these TODOs
 // TODO: Change timers back to object to JSON.stringify it into localStorage
-// TODO: Remake the way add timer button looks
 // TODO: Add option to choose formats
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
@@ -26,8 +25,8 @@ const timers = {
   [timerNameToHash('B')]: [new Date("2022-02-24T01:00:00Z"), 'B']
 };
 
-// Timer button needs to be initialized here because it is used for inserting elements
-const addTimerButton = document.querySelector('#addTimerButton');
+// Timer wrapper is initialized here because it is used for inserting elements
+const addTimerWrapper = document.querySelector('#addTimerWrapper');
 const dhms = {'days': true, 'hours': true, 'minutes': true, 'seconds': true};
 const [hoursTimezoneOffset, minutesTimezoneOffset] = (() => {
   const timezoneOffset = new Date().getTimezoneOffset();
@@ -39,7 +38,7 @@ function createTimer(timerName, innerName) {
   const timerTitle = document.createElement('h1');
   const timerTitleText = document.createTextNode(timerName);
   timerTitle.appendChild(timerTitleText);
-  addTimerButton.insertAdjacentElement('beforebegin', timerTitle);
+  addTimerWrapper.insertAdjacentElement('beforebegin', timerTitle);
 
   // const innerName = timerNameToHash(timerName);
   const timerWrapper = document.createElement('div');
@@ -58,6 +57,7 @@ function createTimer(timerName, innerName) {
   timerDeleteButton.classList.add('deleteTimer');
   timerDeleteButton.id = `${innerName}DeleteButton`;
   timerDeleteButton.textContent = 'Delete timer';
+  timerDeleteButton.type = "button";
   timerWrapper.appendChild(timerDeleteButton);
 
   timerDeleteButton.addEventListener("click", () => {
@@ -65,11 +65,13 @@ function createTimer(timerName, innerName) {
       return;
     }
     const deleteConfirm = document.createElement('button');
+    deleteConfirm.type = "button";
     deleteConfirm.classList.add('deleteTimer');
     deleteConfirm.id = `${innerName}DeleteConfirm`;
     deleteConfirm.textContent = 'Confirm';
 
     const deleteCancel = document.createElement('button');
+    deleteCancel.type = "button";
     deleteCancel.classList.add('deleteTimer');
     deleteCancel.id = `${innerName}DeleteCancel`;
     deleteCancel.textContent = 'Cancel';
@@ -94,7 +96,7 @@ function createTimer(timerName, innerName) {
     });
   });
 
-  addTimerButton.insertAdjacentElement('beforebegin', timerWrapper);
+  addTimerWrapper.insertAdjacentElement('beforebegin', timerWrapper);
 }
 
 function timerNameToHash(name) {
@@ -170,6 +172,7 @@ function main() {
   }
   setTimers();
 
+  const addTimerButton = document.querySelector('#addTimerButton');
   addTimerButton.addEventListener("click", () => {
     const timerNameField = document.querySelector('#addTimerName');
     const timerDateTime = document.querySelector('#addTimerDateTime');

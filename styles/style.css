@@ -63,16 +63,20 @@ footer button {
   align-items: center;
   box-sizing: border-box;
   display: flex;
-  font-family: inherit;
   inline-size: 300px;
 }
 
+#addTimerInput {
+  flex-direction: column;
+}
+
 #addTimerButton {
-  font-size: 50px;
+  font-size: 30px;
   background-color: #222222;
   color: #bbbbbb; 
-  block-size: 100px;
-  border-radius: 15px;
+  block-size: 150px;
+  border-radius: 0px 15px 15px 0px;
+  inline-size: 100px;
 }
 
 #addTimerButton:hover {
@@ -82,13 +86,13 @@ footer button {
 #addTimerName {
   font-size: 20px;
   block-size: 50px;
-  border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 0px 0px 0px;
 }
 
 #addTimerDateString {
   font-size: 15px;
   block-size: 50px;
-  border-radius: 0px 0px 15px 15px;
+  border-radius: 0px 0px 0px 15px;
 }
 
 #addTimerDateTime {
