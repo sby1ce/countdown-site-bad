@@ -1,5 +1,8 @@
 .hintrc
+.eslintrc.json
+.prettierrc.json
 node_modules
 .cache/
+.parcel-cache/
 dist/
 package-lock.json
