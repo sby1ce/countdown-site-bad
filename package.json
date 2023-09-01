@@ -4,12 +4,13 @@
   "description": "A site to setting timers",
   "source": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx parcel build index.html"
+    "test": "node tests/*.js",
+    "build": "npm run test && npx parcel build index.html"
   },
-  "author": "pfcpmf",
+  "author": "sby1bd",
   "license": "ISC",
   "devDependencies": {
+    "axios": "^1.5.0",
     "eslint": "^8.48.0",
     "parcel": "^2.9.3",
     "prettier": "^3.0.3"

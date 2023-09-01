@@ -1,5 +1,4 @@
 // TODO: Organize these TODOs
-// TODO: Change timers back to object to JSON.stringify it into localStorage
 // TODO: Add option to choose formats
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
@@ -19,11 +18,32 @@ const timeUnits = [
   { key: 'seconds', divisor: 1000, suffix: 's' },
   { key: 'milliseconds', divisor: 1, suffix: 'ms' },
 ];
+
+if (!storageAvailable('localStorage')) {
+  alert('localStorage is unavailble for whatever reason');
+} else if (
+  !localStorage ||
+  localStorage.length === 0 ||
+  localStorage['timers'] === '{}'
+) {
+  const initTimer = {
+    timer2130170518: [
+      new Date('2020-12-02T20:00:00Z'),
+      'Time since 2020-12-02',
+    ],
+  };
+  localStorage.setItem('timers', JSON.stringify(initTimer));
+}
+/*
 const timers = {
   [timerNameToHash('A')]: [new Date('2020-12-02T20:00:00Z'), 'A'],
   [timerNameToHash('B')]: [new Date('2022-02-24T01:00:00Z'), 'B'],
   [timerNameToHash('C')]: [new Date('2023-06-28T12:00:00Z'), 'C'],
 };
+*/
+const timers = loadFromLocalStorage();
+console.log(timers);
+console.log(localStorage.length);
 
 // Timer wrapper is initialized here because it is used for inserting elements
 const addTimerWrapper = document.querySelector('#addTimerWrapper');
@@ -35,6 +55,51 @@ const [hoursTimezoneOffset, minutesTimezoneOffset] = (() => {
     String(timezoneOffset % 60).padStart(2, '0'),
   ];
 })();
+
+function storageAvailable(type) {
+  let storage;
+  try {
+    storage = window[type];
+    const x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  } catch (e) {
+    return (
+      e instanceof DOMException &&
+      // Check for specific DOMException names
+      (e.name === 'QuotaExceededError' ||
+        e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+      // acknowledge QuotaExceededError only if there's something already stored
+      storage &&
+      storage.length !== 0
+    );
+  }
+}
+
+function loadFromLocalStorage() {
+  const timersObject = {};
+  const timersString = JSON.parse(localStorage.getItem('timers'));
+  for (const [innerName, [timerDate, timerName]] of Object.entries(
+    timersString
+  )) {
+    timersObject[innerName] = [new Date(timerDate), timerName];
+  }
+  return timersObject;
+}
+
+function saveToLocalStorage(timers) {
+  try {
+    localStorage.setItem('timers', JSON.stringify(timers));
+  } catch (e) {
+    if (!storageAvailable('localStorage')) {
+      alert('Ran out of storage space probably');
+    } else {
+      alert(`Something went wrong: ${e}`);
+      console.error(e);
+    }
+  }
+}
 
 function createTimer(timerName, innerName) {
   // const timerName = timers[innerName][1];
@@ -64,9 +129,6 @@ function createTimer(timerName, innerName) {
   timerWrapper.appendChild(timerDeleteButton);
 
   timerDeleteButton.addEventListener('click', () => {
-    if (timerDeleteButton.disabled) {
-      return;
-    }
     const deleteConfirm = document.createElement('button');
     deleteConfirm.type = 'button';
     deleteConfirm.classList.add('deleteTimer');
@@ -153,6 +215,7 @@ function addTimerNew(timerName, dateString) {
   }
 
   timers[innerName] = [newTimer, timerName];
+  saveToLocalStorage(timers);
 
   if (document.querySelector(`#${innerName}`)) {
     alert(`Timer with the innerName ${timerName} was replaced`);
@@ -164,6 +227,7 @@ function addTimerNew(timerName, dateString) {
 
 function deleteTimer(innerName) {
   delete timers[innerName];
+  saveToLocalStorage(timers);
 }
 
 function convertDateToString(interval, format) {
@@ -209,10 +273,3 @@ function main() {
 }
 
 main();
-
-/*
-const testDeparture = new Date("Jul 28, 2023 13:12:00 UTC+0").getTime();
-const testArrival = new Date("Jul 29, 2023 20:56:00 UTC+0").getTime();
-console.log((testArrival - testDeparture) / 1000 / 60)
-console.log()
-*/
