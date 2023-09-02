@@ -10,7 +10,6 @@
   "author": "sby1bd",
   "license": "ISC",
   "devDependencies": {
-    "axios": "^1.5.0",
     "eslint": "^8.48.0",
     "parcel": "^2.9.3",
     "prettier": "^3.0.3"

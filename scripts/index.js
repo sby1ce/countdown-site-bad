@@ -173,13 +173,17 @@ function timerNameToHash(name) {
 
 function setTimers() {
   const intervalName = setInterval(() => {
-    // Get today's date and time
-    const now = new Date().getTime();
-
-    for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
-      updateTimer(innerName, now, timerDate.getTime());
-    }
+    updateTimers();
   }, 1000);
+}
+
+function updateTimers() {
+  // Get today's date and time
+  const now = new Date().getTime();
+
+  for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
+    updateTimer(innerName, now, timerDate.getTime());
+  }
 }
 
 function updateTimer(innerName, now, countDownDate) {
@@ -248,6 +252,7 @@ function main() {
   for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
     createTimer(timerName, innerName);
   }
+  updateTimers();
   setTimers();
 
   const addTimerButton = document.querySelector('#addTimerButton');
