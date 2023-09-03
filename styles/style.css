@@ -25,6 +25,10 @@ main {
   align-items: center;
 }
 
+.vertical {
+  flex-direction: column;
+}
+
 h1 {
   display: flex;
   justify-content: center;
