@@ -4,16 +4,16 @@
   "description": "A site to setting timers",
   "source": "index.html",
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "npm run test && npx parcel build index.html"
   },
   "author": "sby1bd",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^29.5.4",
     "eslint": "^8.48.0",
     "jest": "^29.6.4",
     "parcel": "^2.9.3",
     "prettier": "^3.0.3"
-  }
+  },
+  "type": "module"
 }

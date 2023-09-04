@@ -15,7 +15,7 @@ import {
   storageAvailable,
   addTimerNew,
   createTimer,
-} from './timersModule';
+} from './timersModule.mjs';
 
 const timeUnits = [
   { key: 'weeks', divisor: 1000 * 60 * 60 * 24 * 7, suffix: 'w' },
@@ -73,7 +73,7 @@ function updateTimer(innerName, now, countDownDate) {
   document.querySelector(`#${innerName}Hours`).textContent = timeInHours;
 }
 
-function convertDateToString(interval, format) {
+export function convertDateToString(interval, format) {
   const result = timeUnits.reduce((acc, unit) => {
     if (format[unit.key]) {
       const value = Math.abs(Math.floor(interval / unit.divisor));
@@ -102,7 +102,9 @@ function main() {
 
     if (timerDateTime.value) {
       // This adding of seconds and timezone shouldn't be necessary but copium
-      insertTimer(addTimerNew(timerNameField.value, `${timerDateTime.value}:00Z`));
+      insertTimer(
+        addTimerNew(timerNameField.value, `${timerDateTime.value}:00Z`)
+      );
       timerNameField.value = '';
       timerDateTime.value = '';
       timerDateField.value = '';
