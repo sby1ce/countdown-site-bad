@@ -122,7 +122,7 @@ export function createTimer(timerName, innerName) {
   return extraTimerWrapper;
 }
 
-function timerNameToHash(name) {
+export function timerNameToHash(name) {
   return `timer${Array.from(name).reduce(
     (hash, char) => 0 | (31 * hash + char.charCodeAt(0)),
     0
