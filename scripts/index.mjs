@@ -8,6 +8,7 @@
 // TODO: Add button to save/load timers into localStorage
 // TODO?: Related, make elements into iframes,
 // so that the selection of the timer text persists
+// TODO: Add option to add by timer rather than by date
 'use strict';
 
 import {
@@ -44,6 +45,8 @@ function insertTimer(timerWrapper) {
 }
 
 function setTimers() {
+  // This is called before the setInterval so that the text is inserted instantly
+  updateTimers();
   const intervalName = setInterval(() => {
     updateTimers();
   }, 1000);
@@ -51,10 +54,10 @@ function setTimers() {
 
 function updateTimers() {
   // Get today's date and time
-  const now = new Date().getTime();
+  const now = Date.now();
 
-  for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
-    updateTimer(innerName, now, timerDate.getTime());
+  for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
+    updateTimer(innerName, now, timerMs);
   }
 }
 
@@ -74,24 +77,24 @@ function updateTimer(innerName, now, countDownDate) {
 }
 
 export function convertDateToString(interval, format) {
+  let absInterval = Math.abs(interval);
   const result = timeUnits.reduce((acc, unit) => {
     if (format[unit.key]) {
-      const value = Math.abs(Math.floor(interval / unit.divisor));
-      interval %= unit.divisor;
+      const value = Math.abs(Math.floor(absInterval / unit.divisor));
+      absInterval %= unit.divisor;
       return acc + (value + unit.suffix + ' ');
     }
     return acc;
   }, '');
 
-  return interval < 0 ? `-${result}` : result.trim();
+  return interval < 0 ? `-${result.trim()}` : result.trim();
 }
 
 function main() {
   // TODO: this is temporary
-  for (const [innerName, [timerDate, timerName]] of Object.entries(timers)) {
+  for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
     insertTimer(createTimer(timerName, innerName));
   }
-  updateTimers();
   setTimers();
 
   const addTimerButton = document.querySelector('#addTimerButton');
@@ -102,9 +105,7 @@ function main() {
 
     if (timerDateTime.value) {
       // This adding of seconds and timezone shouldn't be necessary but copium
-      insertTimer(
-        addTimerNew(timerNameField.value, `${timerDateTime.value}:00Z`)
-      );
+      insertTimer(addTimerNew(timerNameField.value, timerDateTime.value));
       timerNameField.value = '';
       timerDateTime.value = '';
       timerDateField.value = '';
@@ -120,6 +121,10 @@ function main() {
 const timers = getTimers();
 if (typeof window !== 'undefined' && storageAvailable('localStorage')) {
   main();
-} else if (typeof window !== 'undefined' && !storageAvailable('localStorage')) {
+} else if (
+  typeof window !== 'undefined' &&
+  !storageAvailable('localStorage') &&
+  typeof process === 'undefined'
+) {
   alert('localStorage is unavailble for whatever reason');
 }

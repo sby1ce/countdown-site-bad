@@ -1,14 +1,6 @@
 // timerModule.js
 'use strict';
 
-const [hoursTimezoneOffset, minutesTimezoneOffset] = (() => {
-  const timezoneOffset = new Date().getTimezoneOffset();
-  return [
-    String(Math.floor(timezoneOffset / 60)).padStart(2, '0'),
-    String(timezoneOffset % 60).padStart(2, '0'),
-  ];
-})();
-
 export function storageAvailable(type) {
   let storage;
   try {
@@ -33,10 +25,10 @@ export function storageAvailable(type) {
 function loadFromLocalStorage() {
   const timersObject = {};
   const timersString = JSON.parse(localStorage.getItem('timers'));
-  for (const [innerName, [timerDate, timerName]] of Object.entries(
+  for (const [innerName, [timerMs, timerName]] of Object.entries(
     timersString
   )) {
-    timersObject[innerName] = [new Date(timerDate), timerName];
+    timersObject[innerName] = [timerMs, timerName];
   }
   return timersObject;
 }
@@ -129,14 +121,26 @@ export function timerNameToHash(name) {
   )}`;
 }
 
+function parseDateString(dateString) {
+  const tempDate = new Date(dateString);
+  if (tempDate.toString() === 'Invalid Date') {
+    return 'Invalid Date';
+  }
+
+  return Date.UTC(
+    tempDate.getUTCFullYear(),
+    tempDate.getUTCMonth(),
+    tempDate.getUTCDate(),
+    tempDate.getUTCHours(),
+    tempDate.getUTCMinutes(),
+    tempDate.getUTCSeconds(),
+    tempDate.getUTCMilliseconds()
+  );
+}
+
 export function addTimerNew(timerName, dateString) {
   const innerName = timerNameToHash(timerName);
-  const newTimer =
-    dateString.endsWith('Z') || dateString[dateString.length - 3] === ':'
-      ? new Date(dateString)
-      : new Date(
-          `${dateString}+${hoursTimezoneOffset}:${minutesTimezoneOffset}`
-        );
+  const newTimer = parseDateString(dateString);
 
   if (
     innerName === '' ||
@@ -174,7 +178,7 @@ if (
 ) {
   const initTimer = {
     timer2130170518: [
-      new Date('2020-12-02T20:00:00Z'),
+      Date.parse('2020-12-02T20:00:00Z'),
       'Time since 2020-12-02',
     ],
   };

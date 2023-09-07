@@ -102,8 +102,14 @@ footer button {
 #addTimerDateTime {
   block-size: 50px;
   /* Weird borders on this input type */
-  inline-size: 300px;
-  border-radius: 0px;
+  inline-size: 200px;
+  border-width: 1px;
+}
+
+#addTimerOffset {
+  block-size: 50px;
+  inline-size: 100px;
+  border-width: 1px;
 }
 
 .deleteTimer {
