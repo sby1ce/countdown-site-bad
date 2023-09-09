@@ -27,7 +27,7 @@
             <input id="addTimerDateTime" type="datetime-local" step=".1" class="addTimer"></input>
             <select id="addTimerOffset">
               <option value="00:00">UTC</option>
-              <option value="">Local</option>
+              <!-- <option value="">Local</option> -->
             </select>
           </div>
           <input id="addTimerDateString" class="addTimer" placeholder="2020-12-02T20:00:00Z"></input>
@@ -38,7 +38,8 @@
     <hr>
     <footer>
       <button type="button" id="deleteLocalStorage">Delete localStorage</button>
-      <button type="button" id="showLoclaStorage">Get localStorage as text WIP</button>
+      <button type="button" id="showLoclaStorage">Get localStorage as text</button>
+      <textarea readonly hidden></textarea>
     </footer>
   </body>
 </html>

@@ -32,7 +32,7 @@ describe('Convert the number in milliseconds to string for display', () => {
   it('Has a minus when the timer is in the past', () => {
     const then = Date.now();
 
-    sleep(100).then(() => {
+    sleep(1000).then(() => {
       const now = Date.now();
 
       const thing = convertDateToString(then - now, {
@@ -48,10 +48,10 @@ describe('Convert the number in milliseconds to string for display', () => {
   it('Negative timers are negative of positive timers', async () => {
     const past = Date.now();
 
-    await sleep(100);
+    await sleep(1000);
     const present = Date.now();
 
-    sleep(100).then(() => {
+    sleep(1000).then(() => {
       const future = Date.now();
 
       const thing1 = convertDateToString(past - present, {

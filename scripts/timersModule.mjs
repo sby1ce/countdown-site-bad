@@ -1,6 +1,11 @@
 // timerModule.js
 'use strict';
 
+/**
+ * Checks for availability of the storage API
+ * @param {string} type 
+ * @returns {boolean}
+ */
 export function storageAvailable(type) {
   let storage;
   try {
@@ -22,6 +27,10 @@ export function storageAvailable(type) {
   }
 }
 
+/**
+ * Gets timers object from localStorage
+ * @returns {object}
+ */
 function loadFromLocalStorage() {
   const timersObject = {};
   const timersString = JSON.parse(localStorage.getItem('timers'));
@@ -33,6 +42,10 @@ function loadFromLocalStorage() {
   return timersObject;
 }
 
+/**
+ * Saves timers object to localStorage
+ * @param {object} timers 
+ */
 function saveToLocalStorage(timers) {
   try {
     localStorage.setItem('timers', JSON.stringify(timers));
@@ -46,6 +59,12 @@ function saveToLocalStorage(timers) {
   }
 }
 
+/**
+ * Creates div element with h1 name of the timer and a div with different countdowns
+ * @param {string} timerName 
+ * @param {string} innerName 
+ * @returns {HTMLElement}
+ */
 export function createTimer(timerName, innerName) {
   // const timerName = timers[innerName][1];
   const timerTitle = document.createElement('h1');
@@ -114,6 +133,11 @@ export function createTimer(timerName, innerName) {
   return extraTimerWrapper;
 }
 
+/**
+ * Creates a simple ID compliant hash from name
+ * @param {string} name 
+ * @returns {string}
+ */
 export function timerNameToHash(name) {
   return `timer${Array.from(name).reduce(
     (hash, char) => 0 | (31 * hash + char.charCodeAt(0)),
@@ -121,6 +145,11 @@ export function timerNameToHash(name) {
   )}`;
 }
 
+/**
+ * Gets milliseconds since Unix time 0 based on timezone or 'Invalid Date'
+ * @param {string} dateString 
+ * @returns {number}
+ */
 function parseDateString(dateString) {
   const tempDate = new Date(dateString);
   if (tempDate.toString() === 'Invalid Date') {
@@ -138,6 +167,12 @@ function parseDateString(dateString) {
   );
 }
 
+/**
+ * Basically a wrapper for createTimer
+ * @param {string} timerName 
+ * @param {string} dateString 
+ * @returns {HTMLElement}
+ */
 export function addTimerNew(timerName, dateString) {
   const innerName = timerNameToHash(timerName);
   const newTimer = parseDateString(dateString);
@@ -160,11 +195,19 @@ export function addTimerNew(timerName, dateString) {
   return createTimer(timerName, innerName);
 }
 
+/**
+ * Deletes innerName from timers object and saves timers to the localStorage
+ * @param {string} innerName 
+ */
 function deleteTimer(innerName) {
   delete timers[innerName];
   saveToLocalStorage(timers);
 }
 
+/**
+ * Get timers object
+ * @returns {object}
+ */
 export function getTimers() {
   return timers;
 }

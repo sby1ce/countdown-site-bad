@@ -1,4 +1,5 @@
 // TODO: Organize these TODOs
+// TODO: Migrate to TypeScript
 // TODO: Add option to choose formats
 // TODO: Make button to change between flex (priority timers first)
 // and grid, as many timers on screen as possible (like Google Keep)
@@ -80,7 +81,7 @@ export function convertDateToString(interval, format) {
   let absInterval = Math.abs(interval);
   const result = timeUnits.reduce((acc, unit) => {
     if (format[unit.key]) {
-      const value = Math.abs(Math.floor(absInterval / unit.divisor));
+      const value = Math.floor(absInterval / unit.divisor);
       absInterval %= unit.divisor;
       return acc + (value + unit.suffix + ' ');
     }

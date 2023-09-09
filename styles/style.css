@@ -25,10 +25,6 @@ main {
   align-items: center;
 }
 
-.vertical {
-  flex-direction: column;
-}
-
 h1 {
   display: flex;
   justify-content: center;
@@ -102,13 +98,15 @@ footer button {
 #addTimerDateTime {
   block-size: 50px;
   /* Weird borders on this input type */
-  inline-size: 200px;
+  inline-size: 223px;
   border-width: 1px;
+  font-size: 15px;
 }
 
 #addTimerOffset {
-  block-size: 50px;
-  inline-size: 100px;
+  /* Weird borders on this input type */
+  block-size: 49px;
+  inline-size: 74px;
   border-width: 1px;
 }
 
