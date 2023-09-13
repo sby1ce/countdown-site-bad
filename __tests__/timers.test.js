@@ -1,4 +1,4 @@
-import { convertDateToString } from '../scripts/index.mjs';
+import { convertDateToString } from '../scripts/main.mjs';
 import { createTimer, timerNameToHash } from '../scripts/timersModule.mjs';
 
 function sleep(ms) {

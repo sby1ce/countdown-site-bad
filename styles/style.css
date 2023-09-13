@@ -25,6 +25,10 @@ main {
   align-items: center;
 }
 
+.vertical {
+  flex-direction: column;
+}
+
 h1 {
   display: flex;
   justify-content: center;
@@ -44,13 +48,6 @@ h1, p {
   margin: 10px;
 }
 
-footer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
-
 footer button {
   margin: 10px;
   background-color: #222222;
@@ -64,10 +61,6 @@ footer button {
   box-sizing: border-box;
   display: flex;
   inline-size: 300px;
-}
-
-#addTimerInput {
-  flex-direction: column;
 }
 
 #addTimerButton {
@@ -114,4 +107,8 @@ footer button {
   background-color: #222222;
   color: #bbbbbb;
   border-radius: 5px;
+}
+
+#showLocalStorageArea {
+  font-size: 10px;
 }

@@ -1,15 +1,4 @@
-// TODO: Organize these TODOs
-// TODO: Migrate to TypeScript
-// TODO: Add option to choose formats
-// TODO: Make button to change between flex (priority timers first)
-// and grid, as many timers on screen as possible (like Google Keep)
-// TODO: Make automatic highlight of the smallest countdown
-// TODO: Add changing timer priority like Steam wishlist (used to be. RIP)
-// TODO: Optimize hour calculation
-// TODO: Add button to save/load timers into localStorage
-// TODO?: Related, make elements into iframes,
-// so that the selection of the timer text persists
-// TODO: Add option to add by timer rather than by date
+// main.mjs
 'use strict';
 
 import {
@@ -18,6 +7,11 @@ import {
   addTimerNew,
   createTimer,
 } from './timersModule.mjs';
+import {
+  clearLocalStorage,
+  getLocalStorageAsText,
+  handlePasteLocalStorage,
+} from './storageModule.mjs';
 
 const timeUnits = [
   { key: 'weeks', divisor: 1000 * 60 * 60 * 24 * 7, suffix: 'w' },
@@ -91,8 +85,62 @@ export function convertDateToString(interval, format) {
   return interval < 0 ? `-${result.trim()}` : result.trim();
 }
 
+function initFooter() {
+  const showLocalStorageArea = document.querySelector('#showLocalStorageArea');
+  const clearLocalStorageButton = document.querySelector('#clearLocalStorage');
+  clearLocalStorageButton.addEventListener('click', () => {
+    const result = clearLocalStorage();
+    if (result === 'success') {
+      showLocalStorageArea.value = 'Successful localStorage clear';
+    } else {
+      showLocalStorageArea.value = result;
+    }
+  });
+
+  const showLocalStorageButton = document.querySelector('#showLocalStorage');
+  showLocalStorageButton.addEventListener('click', () => {
+    showLocalStorageArea.value = getLocalStorageAsText();
+  });
+
+  const pasteLocalStorageButton = document.querySelector('#pasteLocalStorage');
+  pasteLocalStorageButton.addEventListener('click', () => {
+    const loadedTimers = handlePasteLocalStorage(showLocalStorageArea);
+    if (!loadedTimers) {
+      return null;
+    }
+    clearLocalStorage();
+
+    // Clearing and repopulating with new timers
+    const mainBlock = document.querySelector('main');
+    while (mainBlock.firstChild && mainBlock.firstChild !== addTimerWrapper) {
+      mainBlock.removeChild(mainBlock.firstChild);
+    }
+    for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
+      insertTimer(addTimerNew(timerName, (dateMs = timerMs)));
+    }
+    updateTimers();
+  });
+
+  const openLocalStorageAreaButton = document.querySelector(
+    '#openLocalStorageArea'
+  );
+  openLocalStorageAreaButton.addEventListener('click', () => {
+    showLocalStorageArea.readOnly = showLocalStorageArea.readOnly
+      ? false
+      : true;
+    openLocalStorageAreaButton.textContent =
+      openLocalStorageAreaButton.textContent === 'Open' ? 'Close' : 'Open';
+  });
+
+  const copyLocalStorageAreaButton = document.querySelector(
+    '#copyLocalStorageArea'
+  );
+  copyLocalStorageAreaButton.addEventListener('click', () => {
+    navigator.clipboard.writeText(showLocalStorageArea.value);
+  });
+}
+
 function main() {
-  // TODO: this is temporary
   for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
     insertTimer(createTimer(timerName, innerName));
   }
@@ -106,17 +154,23 @@ function main() {
 
     if (timerDateTime.value) {
       // This adding of seconds and timezone shouldn't be necessary but copium
-      insertTimer(addTimerNew(timerNameField.value, timerDateTime.value));
+      insertTimer(
+        addTimerNew(timerNameField.value, (dateString = timerDateTime.value))
+      );
       timerNameField.value = '';
       timerDateTime.value = '';
       timerDateField.value = '';
     } else if (timerDateField.value) {
-      insertTimer(addTimerNew(timerNameField.value, timerDateField.value));
+      insertTimer(
+        addTimerNew(timerNameField.value, (dateString = timerDateField.value))
+      );
       timerNameField.value = '';
       timerDateTime.value = '';
       timerDateField.value = '';
     }
   });
+
+  initFooter();
 }
 
 const timers = getTimers();

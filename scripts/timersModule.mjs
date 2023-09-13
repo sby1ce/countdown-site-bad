@@ -1,9 +1,9 @@
-// timerModule.js
+// timerModule.mjs
 'use strict';
 
 /**
  * Checks for availability of the storage API
- * @param {string} type 
+ * @param {string} type
  * @returns {boolean}
  */
 export function storageAvailable(type) {
@@ -28,23 +28,8 @@ export function storageAvailable(type) {
 }
 
 /**
- * Gets timers object from localStorage
- * @returns {object}
- */
-function loadFromLocalStorage() {
-  const timersObject = {};
-  const timersString = JSON.parse(localStorage.getItem('timers'));
-  for (const [innerName, [timerMs, timerName]] of Object.entries(
-    timersString
-  )) {
-    timersObject[innerName] = [timerMs, timerName];
-  }
-  return timersObject;
-}
-
-/**
  * Saves timers object to localStorage
- * @param {object} timers 
+ * @param {object} timers
  */
 function saveToLocalStorage(timers) {
   try {
@@ -61,9 +46,9 @@ function saveToLocalStorage(timers) {
 
 /**
  * Creates div element with h1 name of the timer and a div with different countdowns
- * @param {string} timerName 
- * @param {string} innerName 
- * @returns {HTMLElement}
+ * @param {string} timerName
+ * @param {string} innerName
+ * @returns {Element}
  */
 export function createTimer(timerName, innerName) {
   // const timerName = timers[innerName][1];
@@ -135,7 +120,7 @@ export function createTimer(timerName, innerName) {
 
 /**
  * Creates a simple ID compliant hash from name
- * @param {string} name 
+ * @param {string} name
  * @returns {string}
  */
 export function timerNameToHash(name) {
@@ -147,7 +132,7 @@ export function timerNameToHash(name) {
 
 /**
  * Gets milliseconds since Unix time 0 based on timezone or 'Invalid Date'
- * @param {string} dateString 
+ * @param {string} dateString
  * @returns {number}
  */
 function parseDateString(dateString) {
@@ -168,20 +153,26 @@ function parseDateString(dateString) {
 }
 
 /**
- * Basically a wrapper for createTimer
- * @param {string} timerName 
- * @param {string} dateString 
- * @returns {HTMLElement}
+ * Wrapper for createTimer that also records to timers object and saves to localStorage
+ * Can take in a Date object as a string or time in milliseconds
+ * @param {string} timerName
+ * @param {string} dateString
+ * @param {number} dateMs
+ * @returns
  */
-export function addTimerNew(timerName, dateString) {
+export function addTimerNew(timerName, dateString = null, dateMs = null) {
   const innerName = timerNameToHash(timerName);
-  const newTimer = parseDateString(dateString);
+  const newTimer = Number.isInteger(dateMs)
+    ? dateMs
+    : parseDateString(dateString);
 
+  // Fails if incorrect name,
+  // dateString is an empty string or dateString is Invalid Date and at the same time dateMs isn't provided
   if (
     innerName === '' ||
-    dateString === '' ||
-    newTimer.toString() === 'Invalid Date'
+    ((dateString === '' || newTimer.toString() === 'Invalid Date') && !dateMs)
   ) {
+    console.warn('Invalid date/name entered');
     return null;
   }
 
@@ -197,7 +188,7 @@ export function addTimerNew(timerName, dateString) {
 
 /**
  * Deletes innerName from timers object and saves timers to the localStorage
- * @param {string} innerName 
+ * @param {string} innerName
  */
 function deleteTimer(innerName) {
   delete timers[innerName];
@@ -229,7 +220,7 @@ if (
 }
 let virtualTimers;
 if (storageAvailable('localStorage')) {
-  virtualTimers = loadFromLocalStorage();
+  virtualTimers = JSON.parse(localStorage['timers']);
 } else {
   // ignore
   virtualTimers = {};
