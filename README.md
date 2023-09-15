@@ -2,7 +2,7 @@
 Set a countdown timer by either picking a date or pasting the date as text
 
 # TODOs
-## Urgent
+## Important
 - Make highlights for buttons when pressed to indicate the action went through
 - Refactor
 - Write tests

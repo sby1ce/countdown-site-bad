@@ -4,8 +4,9 @@
   "description": "A site to setting timers",
   "source": "index.html",
   "scripts": {
+    "clean_dist": "rimraf dist",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "build": "npm run test && npx parcel build index.html"
+    "build": "npm run clean_dist && npx parcel build index.html"
   },
   "author": "sby1bd",
   "license": "ISC",
@@ -15,7 +16,8 @@
     "jsdom": "^22.1.0",
     "parcel": "^2.9.3",
     "prettier": "^3.0.3",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "rimraf": "^5.0.1"
   },
   "type": "module"
 }

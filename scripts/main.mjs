@@ -109,13 +109,21 @@ function initFooter() {
       return null;
     }
     clearLocalStorage();
+    for (const x in timers) {
+      if (timers.hasOwnProperty(x)) {
+        delete timers[x];
+      }
+    }
 
     // Clearing and repopulating with new timers
     const mainBlock = document.querySelector('main');
     while (mainBlock.firstChild && mainBlock.firstChild !== addTimerWrapper) {
-      mainBlock.removeChild(mainBlock.firstChild);
+      const child = mainBlock.firstChild;
+      child.remove();
     }
-    for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
+    for (const [innerName, [timerMs, timerName]] of Object.entries(
+      loadedTimers
+    )) {
       insertTimer(addTimerNew(timerName, (dateMs = timerMs)));
     }
     updateTimers();
@@ -140,18 +148,14 @@ function initFooter() {
   });
 }
 
-function main() {
-  for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
-    insertTimer(createTimer(timerName, innerName));
-  }
-  setTimers();
-
+function initAddTimer() {
   const addTimerButton = document.querySelector('#addTimerButton');
-  addTimerButton.addEventListener('click', () => {
-    const timerNameField = document.querySelector('#addTimerName');
-    const timerDateTime = document.querySelector('#addTimerDateTime');
-    const timerDateField = document.querySelector('#addTimerDateString');
 
+  const timerNameField = document.querySelector('#addTimerName');
+  const timerDateTime = document.querySelector('#addTimerDateTime');
+  const timerDateField = document.querySelector('#addTimerDateString');
+
+  addTimerButton.addEventListener('click', () => {
     if (timerDateTime.value) {
       // This adding of seconds and timezone shouldn't be necessary but copium
       insertTimer(
@@ -169,7 +173,15 @@ function main() {
       timerDateField.value = '';
     }
   });
+}
 
+function main() {
+  for (const [innerName, [timerMs, timerName]] of Object.entries(timers)) {
+    insertTimer(createTimer(timerName, innerName));
+  }
+  setTimers();
+
+  initAddTimer();
   initFooter();
 }
 
