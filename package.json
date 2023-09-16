@@ -6,7 +6,7 @@
   "scripts": {
     "clean_dist": "rimraf dist",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "build": "npm run clean_dist && npx parcel build --public-url /countdown-timer-bad/ index.html"
+    "build": "npm run clean_dist && npx parcel build --public-url /countdown-timer-bad/dist/ index.html"
   },
   "author": "sby1bd",
   "license": "ISC",
