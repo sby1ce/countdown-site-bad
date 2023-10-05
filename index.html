@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>Countdown</title>
+    <meta name="robots" content="noindex">
+
+    <meta name="dcterms.issued" content="2023-09-13">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="styles/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <main aria-live="polite" aria-relevant="additions removals">
+      <!-- Timers will be here -->
+      <div class="wrapper" id="addTimerWrapper">
+        <div class="wrapper vertical">
+          <input id="addTimerName" class="addTimer" placeholder="New timer">
+          <div class="wrapper">
+            <input id="addTimerDateTime" type="datetime-local" step=".1" class="addTimer">
+            <select id="addTimerOffset">
+              <option value="00:00">UTC</option>
+              <!-- <option value="">Local</option> -->
+            </select>
+          </div>
+          <input id="addTimerDateString" class="addTimer" placeholder="2020-12-02T20:00:00Z">
+        </div>
+        <button type="button" id="addTimerButton" class="addTimer">Add timer</button>
+      </div>
+    </main>
+
+    <hr>
+
+    <footer class="wrapper vertical">
+      <div class="wrapper">
+        <textarea readonly id="showLocalStorageArea" class="addTimer" placeholder="Storage"></textarea>
+        <button type="button" id="copyLocalStorageArea">Copy</button>
+        <button type="button" id="openLocalStorageArea">Open</button>
+      </div>
+      <div class="wrapper">
+        <button type="button" id="clearLocalStorage">Delete localStorage</button>
+        <button type="button" id="showLocalStorage">Get timers as text</button>
+        <button type="button" id="pasteLocalStorage">Load from text</button>
+      </div>
+    </footer>
+
+    <!-- Script tag at the end instead of defer because 
+      W3C Markup Validation Service doesn't like defer on type="module"  -->
+    <script type="module" src="scripts/main.mjs"></script>
+  </body>
+</html>
