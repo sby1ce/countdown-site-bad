@@ -6,6 +6,7 @@ Written with svelte and uses bun
 
 # TODO
 - Add button to add timers
+  - Change `datetime-local` to `date` and `time` because Firefox has bad support for it
 - Add button to delete a timer
 
 # How to clone
