@@ -76,7 +76,7 @@ function updateTimer(timer: Timer, now: number, formats: FormatOption[][]) {
 function convertDateToString(interval: number, format: FormatOption[]) : string {
     const absInterval = Math.abs(interval);
 
-    const result = reduceTimeUnits(structuredClone(timeUnits), format, absInterval);
+    const result = reduceTimeUnits(timeUnits, format, absInterval);
 
     return interval < 0 ? `-${result}` : result;
 }

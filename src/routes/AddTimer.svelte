@@ -1,13 +1,25 @@
-<div>
-    <label for='addName' hidden>Add timer name</label>
-    <input name='addName' type='text' />
-    <label for='addTime' hidden>Choose time</label>
-    <input name='addTime' type='datetime-local' />
+<div class='outer'>
+    <div class='inner'>
+        <label for='addName' hidden>Add timer name</label>
+        <input name='addName' type='text' />
+        <label for='addTime' hidden>Choose time</label>
+        <input name='addTime' type='datetime-local' step='0.001' />
+    </div>
+
+    <button type='button'>
+        Add timer
+    </button>
 </div>
-<button type='button'>
-    Add timer
-</button>
 
 <style>
-
+    div {  
+        display: flex;
+    }
+    .outer {
+        flex-direction: row;
+        inline-size: 20em;
+    }
+    .inner {
+        flex-direction: column;
+    }
 </style>

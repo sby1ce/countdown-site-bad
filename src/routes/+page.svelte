@@ -13,7 +13,7 @@
         align-items: center;
         justify-content: center;
         font-family: Helvetica, Arial, sans-serif;
-        background-color: #333333;
-        color: #cccccc;
+        background-color: #111111;
+        color: #eeeeee;
     }
 </style>
