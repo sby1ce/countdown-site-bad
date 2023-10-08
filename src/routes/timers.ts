@@ -30,14 +30,14 @@ const timeUnits: TimeUnit[] = [
 ];
 
 export function updateTimers(timers: Timer[], formatObjects: Object[]) {
-    // console.log("Entered updateTimers");
     const now: number = Date.now();
 
     const formats: FormatOption[][] = toFormats(formatObjects);
 
-    for (const timer of timers) {
-        updateTimer(timer, now, formats);
-    }
+    return timers.map(timer => { 
+        timer.timerStrings = updateTimer(timer, now, formats);
+        return timer;
+    });
 }
 
 function toFormats(formatObjects: Object[]) : FormatOption[][] {
@@ -61,22 +61,16 @@ function matchStringToEnum(str: string): FormatOption | undefined {
     return Object.values(FormatOption).find(option => option === str) || undefined;
 }
 
-function updateTimer(timer: Timer, now: number, formats: FormatOption[][]) {
-    const distance = timer.origin - now;
+function updateTimer(timer: Timer, now: number, formats: FormatOption[][]) : string[] {
+    const distance: number = timer.origin - now;
 
-    let newTimerStrings = [];
-
-    for (const format of formats) {
-        newTimerStrings.push(convertDateToString(distance, format));
-    }
-
-    timer.timerStrings = newTimerStrings;
+    return formats.map(format => convertDateToString(distance, format));
 }
 
 function convertDateToString(interval: number, format: FormatOption[]) : string {
-    const absInterval = Math.abs(interval);
+    const absInterval: number = Math.abs(interval);
 
-    const result = reduceTimeUnits(timeUnits, format, absInterval);
+    const result: string = reduceTimeUnits(timeUnits, format, absInterval);
 
     return interval < 0 ? `-${result}` : result;
 }
