@@ -1,4 +1,4 @@
-interface Timer {
+interface ITimer {
     key: string;
     name: string;
     origin: number;
@@ -29,7 +29,7 @@ const timeUnits: TimeUnit[] = [
     { key: 'millisecond', divisor: 1, suffix: 'ms' },
 ];
 
-export function updateTimers(timers: Timer[], formatObjects: Object[]) {
+export function updateTimers(timers: ITimer[], formatObjects: Object[]) {
     const now: number = Date.now();
 
     const formats: FormatOption[][] = toFormats(formatObjects);
@@ -61,7 +61,7 @@ function matchStringToEnum(str: string): FormatOption | undefined {
     return Object.values(FormatOption).find(option => option === str) || undefined;
 }
 
-function updateTimer(timer: Timer, now: number, formats: FormatOption[][]) : string[] {
+function updateTimer(timer: ITimer, now: number, formats: FormatOption[][]) : string[] {
     const distance: number = timer.origin - now;
 
     return formats.map(format => convertDateToString(distance, format));

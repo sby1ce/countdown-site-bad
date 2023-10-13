@@ -1,19 +1,21 @@
-<script>
+<script lang='ts'>
     import { updateTimers } from './timers.ts';
     import Timer from './Timer.svelte';
     import AddTimer from './AddTimer.svelte';
+    import { text } from '@sveltejs/kit';
 
-    /**
-     * @param {string} timerName
-     */
-    function hashTimerName(timerName) {
+    interface ITimer {
+        key: string;
+        name: string;
+        origin: number;
+        timerStrings: string[];
+    }
+
+    function hashTimerName(timerName: string) {
         return `timer${Array.from(timerName).reduce((hash, char) => 0 | (31 * hash + char.charCodeAt(0)), 0)}`
     }
 
-    /**
-     * @param {string} dateString
-     */
-    function dateStringToUnix(dateString) {
+    function dateStringToUnix(dateString: string) {
         try {
             const temp = new Date(dateString);
 
@@ -31,10 +33,7 @@
         }
     }
 
-    /**
-     * @param {{ detail: { timerDate: string; timerName: string; }; }} event
-     */
-    function addTimerEvent(event) {
+    function addTimerEvent(event: { detail: { timerDate: string; timerName: string; }; }) {
         const newOrigin = dateStringToUnix(event.detail.timerDate);
 
         if (typeof newOrigin !== 'number' || Number.isNaN(newOrigin)) {
@@ -61,9 +60,14 @@
         }
 
         timers = [...timers, newTimer];
+        try {
+            localStorage.setItem('timers', JSON.stringify(timers));
+        } catch(e) {
+            console.error(e);
+        }
     }
 
-    let timers = [
+    const timersTemplate = [
         {
             key: 'Timer 0',
             name: 'Timer 0 name',
@@ -105,7 +109,15 @@
             hour: true
         }
     ];
-    
+    const temp: string = Boolean(localStorage?.getItem('timers')) ? localStorage.getItem('timers') : '{}';
+    let timers: ITimer[] = (
+        localStorage && 
+        localStorage.length > 0 && 
+        localStorage.getItem('timers')
+        )
+        ? JSON.parse(temp)   
+        : structuredClone(timersTemplate);
+
     timers = updateTimers(timers, formats);
     setInterval(() => {
         timers = updateTimers(timers, formats);

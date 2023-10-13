@@ -3,20 +3,29 @@
 
 	const dispatch = createEventDispatcher();
 
-  const stateMap: Map<string, boolean> = new Map();
-  stateMap.set("success", false);
-  stateMap.set("failure", false);
+  let success: boolean = false;
+  let failure: boolean = false;
+
+  function matchState(state: string, real: boolean) {
+    switch (state) {
+      case 'success':
+        success = real;
+        break;
+      case 'failure':
+        failure = real;
+        break;
+    }
+  }
 
   function colourElement(state: string) {
-    if (!stateMap.get(state)) {
+    if (!state) {
       return null;
     }
 
-    stateMap.set(state, true);
+    matchState(state, true);
     setTimeout(() => {
-      stateMap.set(state, false);
+      matchState(state, false);
     }, 3000);
-    console.log(stateMap.get(state))
   }
 
   function handleClick(e: Event) {
@@ -37,25 +46,21 @@
 <button 
   type="button"
   on:click={handleClick} 
-  class:success={stateMap.get("success")}
-  class:failure={stateMap.get("failure")}>
+  class:success
+  class:failure>
   <slot />
 </button>
 
 <style>
   button {
     font-family: inherit;
-    border-width: 2px;
     box-sizing: border-box;
+    margin: 0px 0.5em 0px 0.5em;
   }
   .success {
     border-color: limegreen;
-    border-width: 10px;
-    margin: -8px;
   }
   .failure {
     border-color: red;
-    border-width: 10px;
-    margin: -8px;
   }
 </style>

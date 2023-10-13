@@ -11,6 +11,7 @@
   }
   function timersToClipboard() {
     // TODO
+    throw new Error('Test');
   }
 
   function clipboardToTimers() {
@@ -21,9 +22,9 @@
 <footer>
   <FooterButton on:click={deleteLocalStorage}>Delete localStorage</FooterButton>
   
-  <FooterButton on:click={timersToClipboard}>Get timers as text</FooterButton>
+  <FooterButton on:click={timersToClipboard}>Timers to clipboard</FooterButton>
 
-  <FooterButton on:click={clipboardToTimers}>Load timers from text</FooterButton>
+  <FooterButton on:click={clipboardToTimers}>Timers from clipboard</FooterButton>
 </footer>
 
 <style>
