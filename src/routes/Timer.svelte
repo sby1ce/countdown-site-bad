@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang='ts'>    
     export let countdowns: string[] = ['0h 0d 0m 0s'];
     export let name: string = 'Default name';
 </script>

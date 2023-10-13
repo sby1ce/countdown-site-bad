@@ -6,7 +6,6 @@
 <h1>Watch countdowns</h1>
 
 <TimerBlock />
-<Footer />
 
 <style>
     :global(body) {
