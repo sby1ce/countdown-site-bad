@@ -1,49 +1,62 @@
 <script lang='ts'>
-  function colourElement(element: HTMLElement, state: string) {
+  function colourElement(id: string, state: string) {
+    const element = document.querySelector(`#${id}`)!;
     const newColour = state;
+    console.log('Colouring', newColour);
 
     element.classList.add(newColour);
     setTimeout(() => {
       element.classList.remove(newColour);
     });
+    console.log('coloured', element.classList);
   }
 
   function deleteLocalStorage() {
-    localStorage.clear();
+    if (localStorage.length) {
+      localStorage.clear();
+      console.log('Cleared localStorage');
+    } else {
+      console.log('localStorage already clear');
+    }
   }
   function timersToClipboard() {
     // TODO
-  }
-  const valueToHandler = {
-    'Delete localStorage': deleteLocalStorage,
-    'Get timers as text': timersToClipboard,
   }
 
   /**
    * @param {Event} e
    */
-  function handleClick(e) {
+  function handleClick(e: Event) {
     e.preventDefault();
+    console.log('Handling click');
 
-    const handlerFunc = valueToHandler[e.currentTarget.value];
+    const cmd = e.currentTarget.id;
     try {
-      handlerFunc();
+      if (cmd === "clear") {
+        deleteLocalStorage();
+      } else if (cmd === "get") {
+        timersToClipboard();
+      } else if (cmd === "load") {
+        // TODO
+      } else {
+        return undefined;
+      }
 
-      colourElement(e.currentTarget, "success");
+      colourElement(cmd, "success");
     } catch (error) {
       console.error(error);
 
-      colourElement(e.currentTarget, "failure");
+      colourElement(cmd, "failure");
     }
   }
 </script>
 
 <footer>
-  <button type="button">Delete localStorage</button>
+  <button type="button" id="clear" on:click={handleClick}>Delete localStorage</button>
 
-  <button type="button">Get timers as text</button>
+  <button type="button" id="get" on:click={handleClick}>Get timers as text</button>
 
-  <button type="button">Load timers from text</button>
+  <button type="button" id="load" on:click={handleClick}>Load timers from text</button>
 </footer>
 
 <style>
@@ -52,11 +65,5 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-  }
-  .success {
-    border-color: limegreen;
-  }
-  .failure {
-    border-color: red;
   }
 </style>
