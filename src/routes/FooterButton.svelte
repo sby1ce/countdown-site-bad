@@ -1,20 +1,45 @@
 <script lang='ts'>
-  import { dispatch } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
 
-  function handleClick() {
-    dispatch();
+	const dispatch = createEventDispatcher();
+
+  const stateMap: Map<string, boolean> = new Map();
+  stateMap.set("success", false);
+  stateMap.set("failure", false);
+
+  function colourElement(state: string) {
+    if (!stateMap.get(state)) {
+      return null;
+    }
+
+    stateMap.set(state, true);
+    setTimeout(() => {
+      stateMap.set(state, false);
+    }, 3000);
+    console.log(stateMap.get(state))
   }
 
-  let id: string;
-  let name: string;
+  function handleClick(e: Event) {
+    e.preventDefault();
 
+    try {
+      dispatch('click');
+
+      colourElement("success");
+    } catch (error) {
+      console.error(error);
+
+      colourElement("failure");
+    }
+  }
 </script>
 
 <button 
   type="button"
   on:click={handleClick} 
-  id>
-  {name}
+  class:success={stateMap.get("success")}
+  class:failure={stateMap.get("failure")}>
+  <slot />
 </button>
 
 <style>
