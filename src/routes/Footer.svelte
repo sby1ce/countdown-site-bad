@@ -1,17 +1,17 @@
-<script lang='ts'>
-  import FooterButton from './FooterButton.svelte';
+<script lang="ts">
+  import FooterButton from "./FooterButton.svelte";
 
   function deleteLocalStorage() {
     if (localStorage.length) {
       localStorage.clear();
-      console.log('Cleared localStorage');
+      console.log("Cleared localStorage");
     } else {
-      console.log('localStorage already clear');
+      console.log("localStorage already clear");
     }
   }
   function timersToClipboard() {
     // TODO
-    throw new Error('Test');
+    throw new Error("Test");
   }
 
   function clipboardToTimers() {
@@ -21,10 +21,11 @@
 
 <footer>
   <FooterButton on:click={deleteLocalStorage}>Delete localStorage</FooterButton>
-  
+
   <FooterButton on:click={timersToClipboard}>Timers to clipboard</FooterButton>
 
-  <FooterButton on:click={clipboardToTimers}>Timers from clipboard</FooterButton>
+  <FooterButton on:click={clipboardToTimers}>Timers from clipboard</FooterButton
+  >
 </footer>
 
 <style>

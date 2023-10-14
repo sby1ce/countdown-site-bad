@@ -1,17 +1,17 @@
-<script lang='ts'>
-  import { createEventDispatcher } from 'svelte';
+<script lang="ts">
+  import { createEventDispatcher } from "svelte";
 
-	const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
   let success: boolean = false;
   let failure: boolean = false;
 
   function matchState(state: string, real: boolean) {
     switch (state) {
-      case 'success':
+      case "success":
         success = real;
         break;
-      case 'failure':
+      case "failure":
         failure = real;
         break;
     }
@@ -32,7 +32,7 @@
     e.preventDefault();
 
     try {
-      dispatch('click');
+      dispatch("click");
 
       colourElement("success");
     } catch (error) {
@@ -43,11 +43,7 @@
   }
 </script>
 
-<button 
-  type="button"
-  on:click={handleClick} 
-  class:success
-  class:failure>
+<button type="button" on:click={handleClick} class:success class:failure>
   <slot />
 </button>
 
