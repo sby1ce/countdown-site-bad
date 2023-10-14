@@ -83,11 +83,7 @@
     };
 
     timers = [...timers, newTimer];
-    try {
-      localStorage.setItem("timers", JSON.stringify(timers));
-    } catch (e) {
-      console.error(e);
-    }
+    localStorage.setItem("timers", JSON.stringify(timers));
   }
 
   let formats = [
@@ -106,27 +102,36 @@
   ];
 
   function loadFromLocalStorage(): ITimer[] {
-    if (!storageAvailable("localStorage")) {
-      return [
-        {
-          key: "Timer 0",
-          name: "Timer 0 name",
-          origin: 0,
-          timerStrings: ["0d 0h 0m 0s", "0s", "0h"],
-        },
-        {
-          key: "Timer 1",
-          name: "Timer 1 here",
-          origin: 1696174196000,
-          timerStrings: ["1d 1h 1m 1s", "1s", "1h"],
-        },
-        {
-          key: "Timer 2",
-          name: "IYKYK",
-          origin: 1607025600000,
-          timerStrings: [],
-        },
-      ];
+    const temp = [
+      {
+        key: "Timer 0",
+        name: "Timer 0 name",
+        origin: 0,
+        timerStrings: ["0d 0h 0m 0s", "0s", "0h"],
+      },
+      {
+        key: "Timer 1",
+        name: "Timer 1 here",
+        origin: 1696174196000,
+        timerStrings: ["1d 1h 1m 1s", "1s", "1h"],
+      },
+      {
+        key: "Timer 2",
+        name: "IYKYK",
+        origin: 1607025600000,
+        timerStrings: [],
+      },
+    ];
+    if (
+      !storageAvailable("localStorage") ||
+      localStorage?.getItem("timers") === undefined ||
+      localStorage.getItem("timers") === null ||
+      localStorage.getItem("timers") === "{}"
+    ) {
+      if (storageAvailable("localStorage")) {
+        localStorage.setItem("timers", "{}"); 
+      }
+      return temp;
     }
     //@ts-expect-error
     return JSON.parse(localStorage.getItem("timers"));
