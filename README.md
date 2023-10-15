@@ -1,5 +1,5 @@
 # Countdown
-Watch countdowns [here](https://sby1bd.github.io/countdown-site-bad/)
+Watch countdowns [here](https://sby1ce.github.io/countdown-site-bad/)
 
 ## Dependecies
 Written with svelte and uses bun

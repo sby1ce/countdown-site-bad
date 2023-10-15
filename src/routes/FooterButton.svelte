@@ -51,6 +51,7 @@
   button {
     font-family: inherit;
     box-sizing: border-box;
+    border-width: 0.5em;
     margin: 0px 0.5em 0px 0.5em;
   }
   .success {
