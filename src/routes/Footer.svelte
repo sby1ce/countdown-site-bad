@@ -27,7 +27,7 @@
       }
 
       timers.set(JSON.parse(timersString));
-    });
+    }).catch(error => { throw new Error(error); });
   }
 </script>
 
