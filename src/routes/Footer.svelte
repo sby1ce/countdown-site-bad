@@ -1,5 +1,6 @@
 <script lang="ts">
   import FooterButton from "./FooterButton.svelte";
+  import { timers } from "./timers.ts";
 
   function deleteLocalStorage() {
     if (localStorage.length) {
@@ -9,13 +10,24 @@
       console.log("localStorage already clear");
     }
   }
+
   function timersToClipboard() {
-    // TODO
-    throw new Error("Test");
+    navigator.clipboard.writeText(`timers${JSON.stringify($timers)}`);
   }
 
   function clipboardToTimers() {
-    // TODO
+    navigator.clipboard.readText().then((clipText) => {
+      const timersString: string = clipText.slice(6);
+
+      if (
+        clipText === null ||
+        (!clipText.startsWith("timers") || timersString.length < 2)
+      ) {
+        throw new Error('Incorrect JSON in clipboard');
+      }
+
+      timers.set(JSON.parse(timersString));
+    });
   }
 </script>
 

@@ -1,15 +1,8 @@
 <script lang="ts">
-  import { updateTimers } from "./timers.ts";
-  import { loadFromLocalStorage } from "./storage.ts";
+  import { timers, updateTimers } from "./timers.ts";
+  import { storageAvailable } from "./storage.ts";
   import Timer from "./Timer.svelte";
   import AddTimer from "./AddTimer.svelte";
-
-  interface ITimer {
-    key: string;
-    name: string;
-    origin: number;
-    timerStrings: string[];
-  }
 
   function hashTimerName(timerName: string) {
     return `timer${Array.from(timerName).reduce(
@@ -47,7 +40,7 @@
 
     const innerName = hashTimerName(event.detail.timerName);
 
-    for (const timer of timers) {
+    for (const timer of $timers) {
       if (timer.key === innerName) {
         return null;
       }
@@ -60,8 +53,11 @@
       timerStrings: ["0d 0h 0m 0s", "0s", "0h"],
     };
 
-    timers = [...timers, newTimer];
-    localStorage.setItem("timers", JSON.stringify(timers));
+    timers.update((t) => [...t, newTimer]);
+
+    if (storageAvailable("localStorage")) {
+      localStorage.setItem("timers", JSON.stringify(timers));
+    }
   }
 
   let formats = [
@@ -79,15 +75,13 @@
     },
   ];
 
-  let timers: ITimer[] = loadFromLocalStorage();
-
-  timers = updateTimers(timers, formats);
+  timers.update((t) => updateTimers(t, formats));
   setInterval(() => {
-    timers = updateTimers(timers, formats);
+    timers.update((t) => updateTimers(t, formats));
   }, 1000);
 </script>
 
-{#each timers as timer (timer.key)}
+{#each $timers as timer (timer.key)}
   <Timer countdowns={timer.timerStrings} name={timer.name} />
 {/each}
 
