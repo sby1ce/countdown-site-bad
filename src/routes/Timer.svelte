@@ -1,12 +1,13 @@
 <script lang="ts">
-  export let countdowns: string[] = ["0h 0d 0m 0s"];
-  export let name: string = "Default name";
+  import { timers } from "./timers.ts";
+
+  export let position: number;
 </script>
 
 <article>
-  <h1>{name}</h1>
+  <h1>{$timers[position].name}</h1>
   <section>
-    {#each countdowns as countdown}
+    {#each $timers[position].timerStrings as countdown}
       <p>{countdown}</p>
     {/each}
   </section>

@@ -81,8 +81,8 @@
   }, 1000);
 </script>
 
-{#each $timers as timer (timer.key)}
-  <Timer countdowns={timer.timerStrings} name={timer.name} />
+{#each $timers as timer, position (timer.key)}
+  <Timer {position} />
 {/each}
 
 <AddTimer on:click={addTimerEvent} />
