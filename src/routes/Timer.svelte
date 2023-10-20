@@ -70,8 +70,9 @@
   .settings {
     font-family: inherit;
     box-sizing: border-box;
-    inline-size: 0.5em;
+    inline-size: 2em;
     min-block-size: 100%;
+    margin: 0 0 0 2em;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -90,5 +91,11 @@
 
   .hidden {
     display: none;
+  }
+
+  button {
+    font-family: inherit;
+    background-color: #222222;
+    color: #dddddd;
   }
 </style>

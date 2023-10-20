@@ -39,15 +39,19 @@
 <style>
   button {
     font-family: inherit;
+    background-color: #222222;
+    color: #dddddd;
   }
+
   div {
     display: flex;
   }
+
   .outer {
     flex-direction: row;
-    inline-size: 20em;
     margin: 2em;
   }
+
   .inner {
     flex-direction: column;
   }

@@ -53,10 +53,14 @@
     box-sizing: border-box;
     border-width: 0.5em;
     margin: 0px 0.5em 0px 0.5em;
+    background-color: #222222;
+    color: #dddddd;
   }
+
   .success {
     border-color: limegreen;
   }
+
   .failure {
     border-color: red;
   }
