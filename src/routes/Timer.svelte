@@ -1,101 +1,111 @@
 <script lang="ts">
-  import { timers } from "./timers.ts";
+	import { timers } from './timers.ts';
 
-  export let position: number;
+	export let position: number;
 
-  let top: string;
-  let left: string = "90%";
-  
-  type Symbol = '-' | 'v';
-  let symbol: Symbol = '-';
-  let hidden: boolean = true;
+	let body: HTMLElement;
 
-  function settings(e: Event) {
-    e.preventDefault();
+	let top: string;
+	let left: string = '90%';
 
-    if (symbol === '-') {
-      const button = (e.currentTarget as HTMLButtonElement)!;
-      const buttonRect = button.getBoundingClientRect();
+	// Menu variables
+	type Symbol = '-' | 'v';
+	let symbol: Symbol = '-';
+	let hidden: boolean = true;
 
-      top = `${buttonRect.top + window.scrollY}px`;
-      left = `${buttonRect.left + window.scrollX + button.offsetWidth}px`
+	function deleteTimer(e: Event) {
+		e.preventDefault();
 
-      symbol = 'v';
-      hidden = false;
-    } else {
-      symbol = '-';
-      hidden = true;
-    }
-  }
+		body.remove();
+	}
+
+	function settings(e: Event) {
+		e.preventDefault();
+
+		if (symbol === '-') {
+			const button = (e.currentTarget as HTMLButtonElement)!;
+			const buttonRect = button.getBoundingClientRect();
+
+			top = `${buttonRect.top + window.scrollY}px`;
+			left = `${buttonRect.left + window.scrollX + button.offsetWidth}px`;
+
+			symbol = 'v';
+			hidden = false;
+		} else {
+			symbol = '-';
+			hidden = true;
+		}
+	}
 </script>
 
-<article>
-  <h1>{$timers[position].name}</h1>
-  <section>
-    {#each $timers[position].timerStrings as countdown}
-      <p>{countdown}</p>
-    {/each}
-    
-    <button class="settings" type="button" on:click={settings}>
-      {symbol}
-    </button>
+<article bind:this={body}>
+	<h1>{$timers[position].name}</h1>
+	<section>
+		{#each $timers[position].timerStrings as countdown}
+			<p>{countdown}</p>
+		{/each}
 
-    <div class:hidden style:left style:top>
-      <button>gaming</button>
-      <button>gaming 2</button>
-    </div>
-  </section>
+		<button class="settings" type="button" on:click={settings}>
+			{symbol}
+		</button>
+
+		<div class:hidden style:left style:top>
+			<button type="button">gaming</button>
+			<button type="button">gaming 2</button>
+			<button type="button" on:click={deleteTimer}>Delete timer</button>
+		</div>
+	</section>
 </article>
 
 <style>
-  article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+	article {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
 
-  section {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-  }
+	section {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
 
-  p {
-    /*box-sizing: border-box;*/
-    margin: 0px 5px 0px 5px;
-  }
+	p {
+		/*box-sizing: border-box;*/
+		margin: 0px 5px 0px 5px;
+	}
 
-  .settings {
-    font-family: inherit;
-    box-sizing: border-box;
-    inline-size: 2em;
-    min-block-size: 100%;
-    margin: 0 0 0 2em;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+	.settings {
+		font-family: inherit;
+		box-sizing: border-box;
+		inline-size: 2em;
+		min-block-size: 100%;
+		margin: 0 0 0 2em;
+		overflow: hidden;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
-  div {
-    display: flex;
-    border-width: 2em;
-    border-color: whitesmoke;
-    border-style: solid;
-    position: absolute;
-    z-index: 255;
-    flex-direction: column;
-  }
+	div {
+		display: flex;
+		border-width: 2em;
+		border-color: whitesmoke;
+		border-style: solid;
+		position: absolute;
+		z-index: 255;
+		flex-direction: column;
+	}
 
-  .hidden {
-    display: none;
-  }
+	.hidden {
+		display: none;
+	}
 
-  button {
-    font-family: inherit;
-    background-color: #222222;
-    color: #dddddd;
-  }
+	button {
+		font-family: inherit;
+		background-color: #222222;
+		color: #dddddd;
+	}
 </style>
