@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { timers } from './timers.ts';
+	//@ts-expect-error
+	import { get_current_component } from 'svelte/internal';
 
 	export let position: number;
 
-	let body: HTMLElement;
-
-	let top: string;
-	let left: string = '90%';
+	const thisComponent = get_current_component();
 
 	// Menu variables
+	let top: string;
+	let left: string = '90%';
 	type Symbol = '-' | 'v';
 	let symbol: Symbol = '-';
 	let hidden: boolean = true;
@@ -16,7 +17,10 @@
 	function deleteTimer(e: Event) {
 		e.preventDefault();
 
-		body.remove();
+		timers.update((t) => {
+			return t.slice(0, position).concat(t.slice(position));
+		});
+		thisComponent.$destroy();
 	}
 
 	function settings(e: Event) {
@@ -38,7 +42,7 @@
 	}
 </script>
 
-<article bind:this={body}>
+<article>
 	<h1>{$timers[position].name}</h1>
 	<section>
 		{#each $timers[position].timerStrings as countdown}

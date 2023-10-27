@@ -7,10 +7,14 @@
 	const dispatch = createEventDispatcher();
 
 	function addTimer() {
-		const shouldContinue = dispatch('click', {
-			timerName: timerNameInput.value,
-			timerDate: timerDateInput.value
-		});
+		const shouldContinue: boolean = dispatch(
+			'click',
+			{
+				timerName: timerNameInput.value,
+				timerDate: timerDateInput.value
+			},
+			{ cancelable: true }
+		);
 
 		if (shouldContinue) {
 			timerNameInput.value = '';
