@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { storageAvailable } from './storage.ts';
 	import { timers } from './timers.ts';
 	//@ts-expect-error
 	import { get_current_component } from 'svelte/internal';
@@ -20,6 +21,11 @@
 		timers.update((t) => {
 			return t.slice(0, position).concat(t.slice(position));
 		});
+
+		if (storageAvailable('localStorage')) {
+			localStorage.setItem('timers', JSON.stringify($timers));
+		}
+
 		thisComponent.$destroy();
 	}
 

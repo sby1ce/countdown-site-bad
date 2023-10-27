@@ -60,7 +60,7 @@
 		timers.update((t) => [...t, newTimer]);
 
 		if (storageAvailable('localStorage')) {
-			localStorage.setItem('timers', JSON.stringify(timers));
+			localStorage.setItem('timers', JSON.stringify($timers));
 		}
 	}
 
